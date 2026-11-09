@@ -1,0 +1,42 @@
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+env/
+*.egg-info/
+.pytest_cache/
+
+# Node
+node_modules/
+dist/
+.npm/
+
+# Model checkpoints and weights (keep directories via .gitkeep)
+*.pt
+*.pth
+*.ckpt
+*.pkl
+*.bin
+*.onnx
+*.safetensors
+!**/checkpoints/.gitkeep
+
+# Temporary files and uploads
+uploads/
+temp/
+tmp/
+
+# Logs
+*.log
+
+# IDE and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
