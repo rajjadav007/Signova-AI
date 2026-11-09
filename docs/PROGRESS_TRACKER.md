@@ -183,32 +183,45 @@ Do not estimate completion based on the number of files created.
 #### Part 2.1: Video Input and Landmark Extraction
 - **Status:** Completed
 - **Execution Date:** 2026-11-09
-- **Report:** 
-esearch/video_pipeline/VIDEO_PIPELINE_REPORT.md
+- **Report:** `research/video_pipeline/VIDEO_PIPELINE_REPORT.md`
 - **Artifacts:**
-  - 
-esearch/video_pipeline/results/International-Week-of-SnapYT.App_keypoints.npy
-  - 
-esearch/video_pipeline/results/International-Week-of-SnapYT.App_extraction_report.json
+  - `research/video_pipeline/results/International-Week-of-SnapYT.App_keypoints.npy`
+  - `research/video_pipeline/results/International-Week-of-SnapYT.App_extraction_report.json`
 - **Key Results:**
-  - Modular, streaming video reader (VideoReader) supporting MP4, AVI, MOV, MKV.
-  - Extracted 94 MediaPipe Holistic landmarks per frame with shape (T, 94, 4) and loat32 dtype.
-  - Exact numerical parity against Phase 1.7.1 baseline (max diff = 0.0, mean diff = 0.0).
+  - Modular, streaming video reader (`VideoReader`) supporting MP4, AVI, MOV, MKV.
+  - Extracted 94 MediaPipe Holistic landmarks per frame with shape `(T, 94, 4)` and `float32` dtype.
+  - Exact numerical parity against Phase 1.7.1 baseline (`max diff = 0.0`, `mean diff = 0.0`).
   - Unit & integration test suite: 16/16 passed.
+
+#### Part 2.2: Video-to-ISLiM Inference Integration
+- **Status:** Completed
+- **Execution Date:** 2026-11-09
+- **Report:** `research/video_pipeline/VIDEO_TO_ISLIM_INTEGRATION_REPORT.md`
+- **Artifacts:**
+  - `research/video_pipeline/results_part2_2/Deaf-U-SnapYT.App_keypoints.npy`
+  - `research/video_pipeline/results_part2_2/Deaf-U-SnapYT.App_inference_report.json`
+  - `research/video_pipeline/results_part2_2/International-Week-of-SnapYT.App_keypoints.npy`
+  - `research/video_pipeline/results_part2_2/International-Week-of-SnapYT.App_inference_report.json`
+- **Key Results:**
+  - End-to-end `VideoToISLiMPipeline` connects raw video directly to English translation text without manual intermediary `.npy` steps.
+  - Tested newly discovered video `Deaf-U-SnapYT.App.mp4` (1,646 frames, 68.65s): generated `"a mixture of two liquids"` (beam search) / `"unknown person"` (greedy).
+  - Tested baseline video `International-Week-of-SnapYT.App.mp4` (125 frames): generated `"but i cannot wait to stop and let me go"` (exact regression parity).
+  - Single model loading and reuse verified; peak VRAM ~315 MB on CUDA.
+  - Unit & integration test suite: 18/18 passed.
 
 | ID | Task | Priority | Status |
 |---|---|---|---|
-| P2-01 | Create ML inference module | Critical | Not Started |
+| P2-01 | Create ML inference module (Part 2.2 VideoToISLiMPipeline) | Critical | Completed |
 | P2-02 | Implement input validation (Part 2.1 Video Input & Landmark Extraction) | Critical | Completed |
-| P2-03 | Implement image preprocessing | Critical | Not Started |
-| P2-04 | Implement model loading | Critical | Not Started |
-| P2-05 | Implement prediction function | Critical | Not Started |
-| P2-06 | Implement class mapping | Critical | Not Started |
-| P2-07 | Implement confidence handling | High | Not Started |
-| P2-08 | Implement unknown prediction handling | High | Not Started |
-| P2-09 | Test multiple input samples | High | Not Started |
-| P2-10 | Measure inference performance | High | Not Started |
-| P2-11 | Write inference unit tests | High | Not Started |
+| P2-03 | Implement image preprocessing (Phase 1 verified preprocessing) | Critical | Completed |
+| P2-04 | Implement model loading (Part 1.9 & Part 2.2 model loader) | Critical | Completed |
+| P2-05 | Implement prediction function (Part 2.2 video-to-text generation) | Critical | Completed |
+| P2-06 | Implement class mapping (T5 vocabulary tokenizer decoding) | Critical | Completed |
+| P2-07 | Implement confidence handling | High | Deferred |
+| P2-08 | Implement unknown prediction handling | High | Deferred |
+| P2-09 | Test multiple input samples (Deaf-U & International-Week) | High | Completed |
+| P2-10 | Measure inference performance (Part 2.2 latency & peak VRAM) | High | Completed |
+| P2-11 | Write inference unit tests (18/18 passed) | High | Completed |
 
 **Expected Output:**
 

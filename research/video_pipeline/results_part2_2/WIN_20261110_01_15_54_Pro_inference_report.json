@@ -1,0 +1,75 @@
+{
+  "input_video_filename": "WIN_20261110_01_15_54_Pro.mp4",
+  "input_video_path": "D:\\Signova AI\\WIN_20261110_01_15_54_Pro.mp4",
+  "video_duration_seconds": 3.457,
+  "fps": 16.78,
+  "resolution": "1280x720",
+  "extracted_frame_count": 58,
+  "landmark_shape": [
+    58,
+    94,
+    4
+  ],
+  "landmark_dtype": "float32",
+  "subsystem_detection_rates": {
+    "pose_detected_frames": 58,
+    "pose_detection_percentage": 100.0,
+    "face_detected_frames": 58,
+    "face_detection_percentage": 100.0,
+    "left_hand_detected_frames": 0,
+    "left_hand_detection_percentage": 0.0,
+    "right_hand_detected_frames": 7,
+    "right_hand_detection_percentage": 12.07
+  },
+  "landmark_presence_percentage": 58.02,
+  "beam_search": {
+    "num_beams": 4,
+    "prediction": "oh my god",
+    "token_ids": [
+      0,
+      3,
+      32,
+      107,
+      82,
+      8581,
+      1
+    ],
+    "inference_time_ms": 505.22
+  },
+  "greedy_search": {
+    "num_beams": 1,
+    "prediction": "a new rule will be imposed on all the states",
+    "token_ids": [
+      0,
+      3,
+      9,
+      126,
+      3356,
+      56,
+      36,
+      3,
+      16068,
+      30,
+      66,
+      8,
+      2315,
+      1
+    ],
+    "inference_time_ms": 145.84
+  },
+  "timings": {
+    "landmark_extraction_time_ms": 4524.8,
+    "preprocessing_time_ms": 3.08,
+    "beam_inference_time_ms": 505.22,
+    "greedy_inference_time_ms": 145.84,
+    "total_processing_time_ms": 5184.04,
+    "total_processing_time_seconds": 5.184
+  },
+  "device": {
+    "type": "cuda",
+    "name": "NVIDIA GeForce RTX 2050",
+    "peak_vram_mb": 314.68
+  },
+  "output_status": "SUCCESS",
+  "semantic_accuracy_status": "UNVERIFIED (No verified reference subtitle provided for evaluation)"
+}

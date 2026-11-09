@@ -30,6 +30,10 @@ from .output_handler import (
     save_json_report,
     save_keypoints,
 )
+from .video_inference_pipeline import (
+    DEFAULT_PART2_2_RESULTS_DIR,
+    VideoToISLiMPipeline,
+)
 from .video_processor import VideoProcessor
 from .video_reader import VideoReader
 
@@ -38,6 +42,8 @@ __all__ = [
     "VideoReader",
     "MediaPipeLandmarkExtractor",
     "VideoProcessor",
+    "VideoToISLiMPipeline",
+    "DEFAULT_PART2_2_RESULTS_DIR",
     "save_keypoints",
     "load_keypoints",
     "save_json_report",

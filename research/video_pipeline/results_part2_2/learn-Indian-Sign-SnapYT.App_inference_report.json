@@ -1,0 +1,83 @@
+{
+  "input_video_filename": "learn-Indian-Sign-SnapYT.App.mp4",
+  "input_video_path": "D:\\Signova AI\\learn-Indian-Sign-SnapYT.App.mp4",
+  "video_duration_seconds": 21.3,
+  "fps": 30.0,
+  "resolution": "720x1280",
+  "extracted_frame_count": 639,
+  "landmark_shape": [
+    639,
+    94,
+    4
+  ],
+  "landmark_dtype": "float32",
+  "subsystem_detection_rates": {
+    "pose_detected_frames": 639,
+    "pose_detection_percentage": 100.0,
+    "face_detected_frames": 639,
+    "face_detection_percentage": 100.0,
+    "left_hand_detected_frames": 603,
+    "left_hand_detection_percentage": 94.37,
+    "right_hand_detected_frames": 613,
+    "right_hand_detection_percentage": 95.93
+  },
+  "landmark_presence_percentage": 97.83,
+  "beam_search": {
+    "num_beams": 4,
+    "prediction": "thank you person i am proud of you",
+    "token_ids": [
+      0,
+      2763,
+      25,
+      568,
+      3,
+      23,
+      183,
+      2764,
+      13,
+      25,
+      1
+    ],
+    "inference_time_ms": 666.4
+  },
+  "greedy_search": {
+    "num_beams": 1,
+    "prediction": "i was a good person and i was very happy to see him",
+    "token_ids": [
+      0,
+      3,
+      23,
+      47,
+      3,
+      9,
+      207,
+      568,
+      11,
+      3,
+      23,
+      47,
+      182,
+      1095,
+      12,
+      217,
+      376,
+      1
+    ],
+    "inference_time_ms": 168.46
+  },
+  "timings": {
+    "landmark_extraction_time_ms": 20390.46,
+    "preprocessing_time_ms": 18.01,
+    "beam_inference_time_ms": 666.4,
+    "greedy_inference_time_ms": 168.46,
+    "total_processing_time_ms": 21262.14,
+    "total_processing_time_seconds": 21.262
+  },
+  "device": {
+    "type": "cuda",
+    "name": "NVIDIA GeForce RTX 2050",
+    "peak_vram_mb": 314.96
+  },
+  "output_status": "SUCCESS",
+  "semantic_accuracy_status": "UNVERIFIED (No verified reference subtitle provided for evaluation)"
+}
