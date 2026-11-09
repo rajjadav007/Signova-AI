@@ -1,17 +1,18 @@
 #!/usr/bin/env python3
 """
-ISLiM Pretrained Model Loading & Verification Script (Signova AI | Phase 1 | Part 1.5)
+ISLiM Pretrained Model Loading & Verification Script (Signova AI | Phase 1 | Part 1.5.2)
 
 Verifies:
 1. Local T5-small tokenizer initialization (SentencePiece / T5Tokenizer).
-2. Official ISLiMModel architecture instantiation (75M parameters).
+2. Official ISLiMModel architecture instantiation with num_query_tokens=0.
 3. Safe checkpoint loading via torch.load (weights_only=True with numpy safe globals).
-4. State dictionary mapping, missing/unexpected key auditing.
-5. Model evaluation mode (model.eval()).
-6. CPU instantiation & parameter verification.
-7. Hardware transfer to NVIDIA GPU & VRAM footprint measurement.
+4. State dictionary mapping, missing/unexpected key auditing (zero missing operational keys).
+5. Encoder output shape verification (B, 128, 512) and zero query-token slicing.
+6. Model evaluation mode (model.eval()).
+7. CPU instantiation & parameter verification.
+8. Hardware transfer to NVIDIA GPU & VRAM footprint measurement.
 
-Does not run inference, training, or prediction generation.
+Does not run full translation inference or generate text predictions.
 """
 
 import sys
@@ -43,7 +44,7 @@ def register_safe_globals():
 
 
 def build_islim_config(assets_dir: Path) -> dict:
-    """Build the official ISLiM architecture configuration dictionary."""
+    """Build the official ISLiM architecture configuration dictionary with full-frame mode."""
     return {
         "encoder": {
             "keypoint_dim": 4,
@@ -56,7 +57,7 @@ def build_islim_config(assets_dir: Path) -> dict:
             "transformer_dropout": 0.2,
             "output_dim": 512,
             "max_frames": 128,
-            "num_query_tokens": 16,
+            "num_query_tokens": 0,
         },
         "t5": {
             "t5_model": str(assets_dir.as_posix()),
@@ -94,7 +95,7 @@ def main():
     print("=" * 70)
 
     # 1. Environment & Path Verification
-    print("\n[1/6] Verifying Paths & Environment...")
+    print("\n[1/7] Verifying Paths & Environment...")
     print(f"  Python Version     : {sys.version.split()[0]}")
     print(f"  PyTorch Version    : {torch.__version__}")
     print(f"  Checkpoint File    : {args.checkpoint}")
@@ -111,7 +112,7 @@ def main():
     print("  [OK] Paths and environment verified.")
 
     # 2. Tokenizer Initialization
-    print("\n[2/6] Initializing Local T5 Tokenizer...")
+    print("\n[2/7] Initializing Local T5 Tokenizer...")
     try:
         tokenizer = T5Tokenizer.from_pretrained(str(args.assets_dir))
         vocab_size = len(tokenizer)
@@ -129,7 +130,7 @@ def main():
         return 1
 
     # 3. Model Architecture Instantiation
-    print("\n[3/6] Instantiating Official ISLiMModel Architecture...")
+    print("\n[3/7] Instantiating Official ISLiMModel Architecture...")
     try:
         from src.islim.model import ISLiMModel
 
@@ -142,13 +143,20 @@ def main():
         print(f"  Visual Encoder     : {enc_params / 1e6:.2f}M parameters ({enc_params:,} params)")
         print(f"  T5 Decoder         : {dec_params / 1e6:.2f}M parameters ({dec_params:,} params)")
         print(f"  Total Parameters   : {total_params / 1e6:.2f}M parameters ({total_params:,} params)")
+
+        # Verify query token configuration
+        assert model.num_query_tokens == 0, f"Expected 0 query tokens, got {model.num_query_tokens}"
+        assert not hasattr(model.visual_encoder.encoder, "query_tokens"), (
+            "query_tokens must not exist when num_query_tokens=0"
+        )
+        print("  Query Tokens       : 0 (No random query-token parameters)")
         print("  [OK] Official ISLiMModel instantiated successfully.")
     except Exception as e:
         print(f"  [FAIL] Model instantiation failed: {e}")
         return 1
 
     # 4. Safe Checkpoint Loading
-    print("\n[4/6] Loading Pretrained Weights (Safe weights_only Mode)...")
+    print("\n[4/7] Loading Pretrained Weights (Safe weights_only Mode)...")
     try:
         register_safe_globals()
         ckpt = torch.load(args.checkpoint, map_location="cpu", weights_only=True)
@@ -169,6 +177,24 @@ def main():
             for k in load_result.unexpected_keys:
                 print(f"    - Unexpected     : {k}")
 
+        # Verification constraints for Part 1.5.2
+        assert load_result.missing_keys == ["logit_scale"], (
+            f"Expected only ['logit_scale'] missing, got {load_result.missing_keys}"
+        )
+        assert "visual_encoder.encoder.query_tokens" not in load_result.missing_keys, (
+            "query_tokens must not appear in missing keys"
+        )
+        expected_unexpected = {
+            "visual_encoder.encoder.attention_query",
+            "visual_encoder.encoder.attention_proj.weight",
+            "visual_encoder.encoder.attention_proj.bias",
+        }
+        assert set(load_result.unexpected_keys) == expected_unexpected, (
+            f"Unexpected keys mismatch. Got: {load_result.unexpected_keys}"
+        )
+        print("  Operational Missing: 0 (Only training-only logit_scale missing)")
+        print("  Unexpected Keys    : 3 (Benign legacy attention pooling keys, unused)")
+
         model.eval()
         print(f"  Evaluation Mode    : model.training = {model.training} (eval enabled)")
         print("  [OK] Checkpoint weights loaded and mapped successfully.")
@@ -176,8 +202,31 @@ def main():
         print(f"  [FAIL] Checkpoint loading failed: {e}")
         return 1
 
-    # 5. CPU Verification
-    print("\n[5/6] Verifying CPU Placement & Parameter Statistics...")
+    # 5. Encoder Output Shape & Temporal Representation Verification
+    print("\n[5/7] Verifying Encoder Output Shape & Temporal Representation...")
+    try:
+        dummy_kps_c_first = torch.zeros((1, 4, 94, 128), dtype=torch.float32)
+        dummy_kps_t_first = torch.zeros((1, 128, 94, 4), dtype=torch.float32)
+        with torch.no_grad():
+            out_c = model.visual_encoder.get_sequence_output(dummy_kps_c_first)
+            out_t = model.visual_encoder.get_sequence_output(dummy_kps_t_first)
+
+        print(f"  Input Shape (C-first): {tuple(dummy_kps_c_first.shape)}")
+        print(f"  Output Shape         : {tuple(out_c.shape)}")
+        print(f"  Input Shape (T-first): {tuple(dummy_kps_t_first.shape)}")
+        print(f"  Output Shape         : {tuple(out_t.shape)}")
+
+        assert out_c.shape == (1, 128, 512), f"Expected (1, 128, 512), got {out_c.shape}"
+        assert out_t.shape == (1, 128, 512), f"Expected (1, 128, 512), got {out_t.shape}"
+        print("  Query Token Slicing  : None (All 128 temporal representations preserved)")
+        print("  T5 Conditioning Dim  : 512 (Matches T5 decoder d_model=512)")
+        print("  [OK] Encoder output shape successfully verified as (B, 128, 512).")
+    except Exception as e:
+        print(f"  [FAIL] Encoder shape verification failed: {e}")
+        return 1
+
+    # 6. CPU Verification
+    print("\n[6/7] Verifying CPU Placement & Parameter Statistics...")
     try:
         device_cpu = next(model.parameters()).device
         print(f"  Model Device       : {device_cpu}")
@@ -187,8 +236,8 @@ def main():
         print(f"  [FAIL] CPU verification failed: {e}")
         return 1
 
-    # 6. GPU Hardware Transfer & VRAM Measurement
-    print("\n[6/6] Verifying NVIDIA GPU Placement & VRAM Footprint...")
+    # 7. GPU Hardware Transfer & VRAM Measurement
+    print("\n[7/7] Verifying NVIDIA GPU Placement & VRAM Footprint...")
     cuda_available = torch.cuda.is_available()
     print(f"  CUDA Available     : {cuda_available}")
     if cuda_available and args.device.startswith("cuda"):
@@ -229,7 +278,7 @@ def main():
         print("  [SKIP] CUDA not available or CPU requested. GPU test skipped.")
 
     print("\n" + "=" * 70)
-    print("  STATUS: ALL PART 1.5 VERIFICATION CHECKS PASSED SUCCESSFULLY!")
+    print("  STATUS: ALL PART 1.5.2 VERIFICATION CHECKS PASSED SUCCESSFULLY!")
     print("=" * 70)
     return 0
 
