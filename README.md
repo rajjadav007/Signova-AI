@@ -8,3 +8,4 @@ Signova AI is an accessibility-focused application designed to bridge communicat
 
 - `preparation`: Active branch for all pre-hackathon development, documentation, architecture, ISLiM setup, ML pipeline, backend, frontend, and tests.
 - `main`: Reserved for hackathon development.
+
