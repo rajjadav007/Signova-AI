@@ -180,10 +180,26 @@ Do not estimate completion based on the number of files created.
 
 **Goal:** Build a reusable inference pipeline around the selected pretrained model.
 
+#### Part 2.1: Video Input and Landmark Extraction
+- **Status:** Completed
+- **Execution Date:** 2026-11-09
+- **Report:** 
+esearch/video_pipeline/VIDEO_PIPELINE_REPORT.md
+- **Artifacts:**
+  - 
+esearch/video_pipeline/results/International-Week-of-SnapYT.App_keypoints.npy
+  - 
+esearch/video_pipeline/results/International-Week-of-SnapYT.App_extraction_report.json
+- **Key Results:**
+  - Modular, streaming video reader (VideoReader) supporting MP4, AVI, MOV, MKV.
+  - Extracted 94 MediaPipe Holistic landmarks per frame with shape (T, 94, 4) and loat32 dtype.
+  - Exact numerical parity against Phase 1.7.1 baseline (max diff = 0.0, mean diff = 0.0).
+  - Unit & integration test suite: 16/16 passed.
+
 | ID | Task | Priority | Status |
 |---|---|---|---|
 | P2-01 | Create ML inference module | Critical | Not Started |
-| P2-02 | Implement input validation | Critical | Not Started |
+| P2-02 | Implement input validation (Part 2.1 Video Input & Landmark Extraction) | Critical | Completed |
 | P2-03 | Implement image preprocessing | Critical | Not Started |
 | P2-04 | Implement model loading | Critical | Not Started |
 | P2-05 | Implement prediction function | Critical | Not Started |

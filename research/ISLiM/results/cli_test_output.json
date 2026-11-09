@@ -1,0 +1,38 @@
+{
+  "success": true,
+  "prediction": "but i cannot wait to stop and let me go",
+  "token_ids": [
+    0,
+    68,
+    3,
+    23,
+    1178,
+    1749,
+    12,
+    1190,
+    11,
+    752,
+    140,
+    281,
+    1
+  ],
+  "device": "cuda:0",
+  "decoding_strategy": "beam",
+  "preprocessing_time_ms": 15.45,
+  "inference_time_ms": 1262.76,
+  "total_time_ms": 1278.21,
+  "input_shape": [
+    125,
+    94,
+    4
+  ],
+  "model_input_shape": [
+    1,
+    4,
+    94,
+    128
+  ],
+  "model": "ISLiM",
+  "accuracy_verified": false,
+  "note": "Translation accuracy is unverified without ground-truth subtitles/labels."
+}

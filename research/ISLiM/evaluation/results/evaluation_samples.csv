@@ -1,0 +1,2 @@
+sample_id,source,reference_translation,has_verified_reference,beam_prediction,greedy_prediction,preprocessing_ms,gpu_warm_latency_s,cpu_latency_s,tracking_risk_level,status
+International-Week-of-SnapYT.App.mp4,Local workspace root video,None (Unlabelled),False,but i cannot wait to stop and let me go,i cannot wait to stop my unknown,13.844,0.4215,0.8207,MODERATE,UNLABELLED_REAL_VIDEO
