@@ -6,9 +6,18 @@ Validates and loads raw landmark sequences from .npy files or NumPy arrays.
 
 from pathlib import Path
 from typing import Union, Tuple, List
+import sys
 import numpy as np
 
-from inference.exceptions import InvalidInputError
+_INFERENCE_DIR = Path(__file__).resolve().parent
+_ISLIM_DIR = _INFERENCE_DIR.parent
+if str(_ISLIM_DIR) not in sys.path:
+    sys.path.insert(0, str(_ISLIM_DIR))
+
+try:
+    from inference.exceptions import InvalidInputError
+except ImportError:
+    from .exceptions import InvalidInputError
 
 
 NUM_LANDMARKS = 94

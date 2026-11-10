@@ -4,6 +4,8 @@
     "backend"
   ],
   "extraPaths": [
-    "."
+    ".",
+    "research/ISLiM",
+    "backend"
   ]
 }

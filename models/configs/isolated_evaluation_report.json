@@ -1,0 +1,20 @@
+{
+  "timestamp": "2026-11-10T19:10:46Z",
+  "winner": "Temporal_CNN",
+  "models": {
+    "Temporal_CNN": {
+      "model_type": "Temporal_CNN",
+      "param_count": 568643,
+      "test_acc": 0.5335820895522388,
+      "test_macro_f1": 0.47321177992819785,
+      "latency_ms": 0.05550416666142997
+    },
+    "BiLSTM": {
+      "model_type": "BiLSTM",
+      "param_count": 770499,
+      "test_acc": 0.332089552238806,
+      "test_macro_f1": 0.24127804202431066,
+      "latency_ms": 0.054799768516086596
+    }
+  }
+}

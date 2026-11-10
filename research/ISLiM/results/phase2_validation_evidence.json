@@ -1,0 +1,499 @@
+{
+  "timestamp": "2026-11-11T00:17:19Z",
+  "test_2_checkpoint": {
+    "checkpoint_path": "D:\\Signova AI\\research\\ISLiM\\checkpoints\\ISLiM_full_posestitch_pre_processed.pt",
+    "file_size_mb": 858.27,
+    "epoch": 103,
+    "total_state_dict_keys": 208,
+    "total_model_parameters": 74975673,
+    "encoder_parameters": 14469048,
+    "t5_parameters": 60506624,
+    "strict_loading_passed": false,
+    "missing_keys": [
+      "logit_scale"
+    ],
+    "unexpected_keys": [
+      "visual_encoder.encoder.attention_query",
+      "visual_encoder.encoder.attention_proj.weight",
+      "visual_encoder.encoder.attention_proj.bias"
+    ],
+    "val_results": {
+      "epoch": 103,
+      "val_loss": 3.1433,
+      "corpus_bleu": 0.0,
+      "sent_bleu_avg": 7.71,
+      "sent_bleu_p50": 4.06,
+      "sent_bleu_zero": 1277,
+      "sent_bleu_ge10": 1227,
+      "ps_b1": 22.54,
+      "ps_b2": 13.25,
+      "ps_b3": 8.8,
+      "ps_b4": 6.19,
+      "rouge_l": 19.76,
+      "pred_len_avg": 10.8,
+      "ref_len_avg": 11.3
+    }
+  },
+  "test_5_tokenizer": {
+    "special_tokens": {
+      "pad_token": "<pad>",
+      "pad_token_id": 0,
+      "eos_token": "</s>",
+      "eos_token_id": 1,
+      "unk_token": "<unk>",
+      "unk_token_id": 2,
+      "vocab_size": 32000
+    },
+    "token_mappings": {
+      "person": [
+        568
+      ],
+      "unknown": [
+        7752
+      ],
+      "president": [
+        2753
+      ],
+      "minister": [
+        6323
+      ],
+      "cannot": [
+        1178
+      ],
+      "india": [
+        18222
+      ],
+      "1": [
+        209
+      ],
+      "0": [
+        3,
+        632
+      ]
+    }
+  },
+  "test_6_posestitch": [
+    {
+      "original": "Chief Minister Uddhav Thackeray arrived in Mumbai.",
+      "posestitch_processed": "chief minister uddhav thackeray arrived in mumbai"
+    },
+    {
+      "original": "They don't know what's happening in 2026.",
+      "posestitch_processed": "they do not know what is happening in 2 0 2 6"
+    },
+    {
+      "original": "She didn't speak with Prime Minister Modi at 10 AM.",
+      "posestitch_processed": "she did not speak with prime minister modi at 1 0 am"
+    }
+  ],
+  "test_3_and_7_inferences": [
+    {
+      "sample_name": "Deaf-U-SnapYT.App (online-video-cutter.com)_keypoints.npy",
+      "raw_shape": [
+        166,
+        94,
+        4
+      ],
+      "signova_beam_prediction": "i do not know what to do",
+      "upstream_beam_prediction": "i do not know what to do",
+      "parity_match": true,
+      "beam_token_ids": [
+        0,
+        3,
+        23,
+        103,
+        59,
+        214,
+        125,
+        12,
+        103,
+        1
+      ],
+      "signova_greedy_prediction": "i am afraid that if i go too far away i will go too far away",
+      "greedy_token_ids": [
+        0,
+        3,
+        23,
+        183,
+        7403,
+        24,
+        3,
+        99,
+        3,
+        23,
+        281,
+        396,
+        623,
+        550,
+        3,
+        23,
+        56,
+        281,
+        396,
+        623,
+        550,
+        1
+      ],
+      "beam_latency_ms": 629.39,
+      "greedy_latency_ms": 271.68
+    },
+    {
+      "sample_name": "Deaf-U-SnapYT.App_keypoints.npy",
+      "raw_shape": [
+        1646,
+        94,
+        4
+      ],
+      "signova_beam_prediction": "a mixture of two liquids",
+      "upstream_beam_prediction": "a mixture of two liquids",
+      "parity_match": true,
+      "beam_token_ids": [
+        0,
+        3,
+        9,
+        4989,
+        13,
+        192,
+        4400,
+        7,
+        1
+      ],
+      "signova_greedy_prediction": "unknown person",
+      "greedy_token_ids": [
+        0,
+        7752,
+        568,
+        1
+      ],
+      "beam_latency_ms": 227.24,
+      "greedy_latency_ms": 187.64
+    },
+    {
+      "sample_name": "Indian-sign-language-SnapYT.App_keypoints.npy",
+      "raw_shape": [
+        746,
+        94,
+        4
+      ],
+      "signova_beam_prediction": "i want to tell you that person is a very important part of the culture",
+      "upstream_beam_prediction": "i want to tell you that person is a very important part of the culture",
+      "parity_match": true,
+      "beam_token_ids": [
+        0,
+        3,
+        23,
+        241,
+        12,
+        817,
+        25,
+        24,
+        568,
+        19,
+        3,
+        9,
+        182,
+        359,
+        294,
+        13,
+        8,
+        1543,
+        1
+      ],
+      "signova_greedy_prediction": "i am a sarpanch person is a sarpanch",
+      "greedy_token_ids": [
+        0,
+        3,
+        23,
+        183,
+        3,
+        9,
+        3,
+        7,
+        291,
+        2837,
+        524,
+        568,
+        19,
+        3,
+        9,
+        3,
+        7,
+        291,
+        2837,
+        524,
+        1
+      ],
+      "beam_latency_ms": 278.54,
+      "greedy_latency_ms": 252.55
+    },
+    {
+      "sample_name": "International-Week-of-SnapYT.App_keypoints.npy",
+      "raw_shape": [
+        125,
+        94,
+        4
+      ],
+      "signova_beam_prediction": "but i cannot wait to stop and let me go",
+      "upstream_beam_prediction": "but i cannot wait to stop and let me go",
+      "parity_match": true,
+      "beam_token_ids": [
+        0,
+        68,
+        3,
+        23,
+        1178,
+        1749,
+        12,
+        1190,
+        11,
+        752,
+        140,
+        281,
+        1
+      ],
+      "signova_greedy_prediction": "i cannot wait to stop my unknown",
+      "greedy_token_ids": [
+        0,
+        3,
+        23,
+        1178,
+        1749,
+        12,
+        1190,
+        82,
+        7752,
+        1
+      ],
+      "beam_latency_ms": 166.48,
+      "greedy_latency_ms": 113.33
+    },
+    {
+      "sample_name": "Learn-Indian-Sign-SnapYT.App (1) (online-video-cutter.com)_keypoints.npy",
+      "raw_shape": [
+        178,
+        94,
+        4
+      ],
+      "signova_beam_prediction": "the sun rays are expected to pass from here",
+      "upstream_beam_prediction": "the sun rays are expected to pass from here",
+      "parity_match": true,
+      "beam_token_ids": [
+        0,
+        8,
+        1997,
+        3,
+        2866,
+        7,
+        33,
+        1644,
+        12,
+        1903,
+        45,
+        270,
+        1
+      ],
+      "signova_greedy_prediction": "the unknown is about to collapse and the wind will blow the wind up",
+      "greedy_token_ids": [
+        0,
+        8,
+        7752,
+        19,
+        81,
+        12,
+        11612,
+        11,
+        8,
+        2943,
+        56,
+        6019,
+        8,
+        2943,
+        95,
+        1
+      ],
+      "beam_latency_ms": 186.52,
+      "greedy_latency_ms": 177.22
+    },
+    {
+      "sample_name": "learn-Indian-Sign-SnapYT.App_keypoints.npy",
+      "raw_shape": [
+        639,
+        94,
+        4
+      ],
+      "signova_beam_prediction": "thank you person i am proud of you",
+      "upstream_beam_prediction": "thank you person i am proud of you",
+      "parity_match": true,
+      "beam_token_ids": [
+        0,
+        2763,
+        25,
+        568,
+        3,
+        23,
+        183,
+        2764,
+        13,
+        25,
+        1
+      ],
+      "signova_greedy_prediction": "i was a good person and i was very happy to see him",
+      "greedy_token_ids": [
+        0,
+        3,
+        23,
+        47,
+        3,
+        9,
+        207,
+        568,
+        11,
+        3,
+        23,
+        47,
+        182,
+        1095,
+        12,
+        217,
+        376,
+        1
+      ],
+      "beam_latency_ms": 163.17,
+      "greedy_latency_ms": 192.84
+    },
+    {
+      "sample_name": "vidssavecom-president-prime-minister-chief-minister-indian-sign-language-i_KWDwb1ih_keypoints.npy",
+      "raw_shape": [
+        67,
+        94,
+        4
+      ],
+      "signova_beam_prediction": "balloons",
+      "upstream_beam_prediction": "balloons",
+      "parity_match": true,
+      "beam_token_ids": [
+        0,
+        14526,
+        7,
+        1
+      ],
+      "signova_greedy_prediction": "balloons and unknown",
+      "greedy_token_ids": [
+        0,
+        14526,
+        7,
+        11,
+        7752,
+        1
+      ],
+      "beam_latency_ms": 54.05,
+      "greedy_latency_ms": 55.32
+    },
+    {
+      "sample_name": "WIN_20261110_01_15_46_Pro_keypoints.npy",
+      "raw_shape": [
+        57,
+        94,
+        4
+      ],
+      "signova_beam_prediction": "oh my god",
+      "upstream_beam_prediction": "oh my god",
+      "parity_match": true,
+      "beam_token_ids": [
+        0,
+        3,
+        32,
+        107,
+        82,
+        8581,
+        1
+      ],
+      "signova_greedy_prediction": "if you are interested please do attend",
+      "greedy_token_ids": [
+        0,
+        3,
+        99,
+        25,
+        33,
+        1638,
+        754,
+        103,
+        2467,
+        1
+      ],
+      "beam_latency_ms": 83.0,
+      "greedy_latency_ms": 86.42
+    },
+    {
+      "sample_name": "WIN_20261110_01_15_54_Pro_keypoints.npy",
+      "raw_shape": [
+        58,
+        94,
+        4
+      ],
+      "signova_beam_prediction": "oh my god",
+      "upstream_beam_prediction": "oh my god",
+      "parity_match": true,
+      "beam_token_ids": [
+        0,
+        3,
+        32,
+        107,
+        82,
+        8581,
+        1
+      ],
+      "signova_greedy_prediction": "a new rule will be imposed on all the states",
+      "greedy_token_ids": [
+        0,
+        3,
+        9,
+        126,
+        3356,
+        56,
+        36,
+        3,
+        16068,
+        30,
+        66,
+        8,
+        2315,
+        1
+      ],
+      "beam_latency_ms": 108.58,
+      "greedy_latency_ms": 143.06
+    },
+    {
+      "sample_name": "WIN_20261110_01_31_01_Pro_keypoints.npy",
+      "raw_shape": [
+        59,
+        94,
+        4
+      ],
+      "signova_beam_prediction": "slad",
+      "upstream_beam_prediction": "slad",
+      "parity_match": true,
+      "beam_token_ids": [
+        0,
+        3,
+        7,
+        521,
+        26,
+        1
+      ],
+      "signova_greedy_prediction": "sri person person",
+      "greedy_token_ids": [
+        0,
+        3,
+        7,
+        52,
+        23,
+        568,
+        568,
+        1
+      ],
+      "beam_latency_ms": 77.24,
+      "greedy_latency_ms": 81.31
+    }
+  ]
+}

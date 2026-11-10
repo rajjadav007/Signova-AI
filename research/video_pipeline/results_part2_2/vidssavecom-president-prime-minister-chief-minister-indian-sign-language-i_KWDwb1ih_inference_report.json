@@ -1,0 +1,64 @@
+{
+  "input_video_filename": "vidssavecom-president-prime-minister-chief-minister-indian-sign-language-i_KWDwb1ih.mp4",
+  "input_video_path": "D:\\Signova AI\\vidssavecom-president-prime-minister-chief-minister-indian-sign-language-i_KWDwb1ih.mp4",
+  "video_duration_seconds": 2.233,
+  "fps": 30.0,
+  "resolution": "720x1280",
+  "extracted_frame_count": 67,
+  "landmark_shape": [
+    67,
+    94,
+    4
+  ],
+  "landmark_dtype": "float32",
+  "subsystem_detection_rates": {
+    "pose_detected_frames": 67,
+    "pose_detection_percentage": 100.0,
+    "face_detected_frames": 67,
+    "face_detection_percentage": 100.0,
+    "left_hand_detected_frames": 25,
+    "left_hand_detection_percentage": 37.31,
+    "right_hand_detected_frames": 40,
+    "right_hand_detection_percentage": 59.7
+  },
+  "landmark_presence_percentage": 76.99,
+  "beam_search": {
+    "num_beams": 4,
+    "prediction": "balloons",
+    "token_ids": [
+      0,
+      14526,
+      7,
+      1
+    ],
+    "inference_time_ms": 1266.85
+  },
+  "greedy_search": {
+    "num_beams": 1,
+    "prediction": "balloons and unknown",
+    "token_ids": [
+      0,
+      14526,
+      7,
+      11,
+      7752,
+      1
+    ],
+    "inference_time_ms": 237.76
+  },
+  "timings": {
+    "landmark_extraction_time_ms": 9127.03,
+    "preprocessing_time_ms": 20.4,
+    "beam_inference_time_ms": 1266.85,
+    "greedy_inference_time_ms": 237.76,
+    "total_processing_time_ms": 10671.45,
+    "total_processing_time_seconds": 10.671
+  },
+  "device": {
+    "type": "cuda",
+    "name": "NVIDIA GeForce RTX 2050",
+    "peak_vram_mb": 314.3
+  },
+  "output_status": "SUCCESS",
+  "semantic_accuracy_status": "UNVERIFIED (No verified reference subtitle provided for evaluation)"
+}

@@ -239,21 +239,38 @@ A working inference module that accepts supported inputs and returns structured 
 
 **Goal:** Expose the AI inference pipeline through backend APIs.
 
+#### Part 3.1: Core FastAPI Backend & ISLiM Video Prediction Endpoint
+- **Status:** Completed
+- **Execution Date:** 2026-11-10
+- **Artifacts:**
+  - ackend/app/main.py
+  - ackend/app/core/config.py
+  - ackend/app/schemas/health.py, ackend/app/schemas/predict.py
+  - ackend/app/services/inference_service.py
+  - ackend/app/api/routes/health.py, ackend/app/api/routes/predict.py
+  - ackend/tests/test_health_and_predict.py, ackend/tests/test_real_video_integration.py
+- **Key Results:**
+  - FastAPI application initialized with lifespan event loading ISLiM pipeline once on startup.
+  - Video upload prediction endpoint POST /api/v1/predict/video processes uploaded MP4/WebM files via worker thread pool.
+  - Health endpoints GET /health and GET /api/v1/health report backend and model readiness.
+  - Unit tests: 6/6 passed in 0.38s.
+  - Real video E2E integration test: passed with live ISLiM model prediction on sample video in 24.60s.
+
 | ID | Task | Priority | Status |
 |---|---|---|---|
-| P3-01 | Initialize FastAPI application | Critical | Not Started |
-| P3-02 | Configure project settings | High | Not Started |
-| P3-03 | Configure environment variables | High | Not Started |
-| P3-04 | Configure CORS | High | Not Started |
-| P3-05 | Create health endpoint | High | Not Started |
-| P3-06 | Create prediction request schema | Critical | Not Started |
-| P3-07 | Create prediction response schema | Critical | Not Started |
-| P3-08 | Integrate ML inference service | Critical | Not Started |
-| P3-09 | Create image prediction endpoint | Critical | Not Started |
-| P3-10 | Add error handling | High | Not Started |
-| P3-11 | Add request validation | High | Not Started |
-| P3-12 | Add basic rate limiting | Medium | Not Started |
-| P3-13 | Write API tests | High | Not Started |
+| P3-01 | Initialize FastAPI application | Critical | Completed |
+| P3-02 | Configure project settings | High | Completed |
+| P3-03 | Configure environment variables | High | Completed |
+| P3-04 | Configure CORS | High | Completed |
+| P3-05 | Create health endpoint | High | Completed |
+| P3-06 | Create prediction request schema | Critical | Completed |
+| P3-07 | Create prediction response schema | Critical | Completed |
+| P3-08 | Integrate ML inference service | Critical | Completed |
+| P3-09 | Create video prediction endpoint | Critical | Completed |
+| P3-10 | Add error handling | High | Completed |
+| P3-11 | Add request validation | High | Completed |
+| P3-12 | Add basic rate limiting | Medium | Deferred |
+| P3-13 | Write API tests | High | Completed |
 
 **Expected Output:**
 

@@ -1,0 +1,56 @@
+{
+  "vidssavecom-president-prime-minister-chief-minister-indian-sign-language-i_KWDwb1ih.mp4": {
+    "fps": 30.0,
+    "total_frames": 67,
+    "duration_seconds": 2.233,
+    "segments": [
+      {
+        "segment_id": "seg_001",
+        "start_frame": 6,
+        "end_frame": 22,
+        "start_time": 0.20,
+        "end_time": 0.73,
+        "label": "PRESIDENT"
+      },
+      {
+        "segment_id": "seg_002",
+        "start_frame": 26,
+        "end_frame": 46,
+        "start_time": 0.87,
+        "end_time": 1.53,
+        "label": "PRIME_MINISTER"
+      }
+    ]
+  },
+  "Learn-Indian-Sign-SnapYT.App (1) (online-video-cutter.com).mp4": {
+    "fps": 29.97,
+    "total_frames": 178,
+    "duration_seconds": 5.939,
+    "segments": [
+      {
+        "segment_id": "seg_001",
+        "start_frame": 19,
+        "end_frame": 73,
+        "start_time": 0.63,
+        "end_time": 2.44,
+        "label": "SIGN_PHRASE_1"
+      },
+      {
+        "segment_id": "seg_002",
+        "start_frame": 81,
+        "end_frame": 111,
+        "start_time": 2.70,
+        "end_time": 3.70,
+        "label": "SIGN_PHRASE_2"
+      },
+      {
+        "segment_id": "seg_003",
+        "start_frame": 118,
+        "end_frame": 177,
+        "start_time": 3.94,
+        "end_time": 5.91,
+        "label": "SIGN_PHRASE_3"
+      }
+    ]
+  }
+}
