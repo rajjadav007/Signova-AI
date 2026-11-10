@@ -1,5 +1,5 @@
 {
-  "benchmark_timestamp": "2026-11-10T19:25:28Z",
+  "benchmark_timestamp": "2026-11-10T20:08:53Z",
   "videos_evaluated": [
     {
       "video_filename": "vidssavecom-president-prime-minister-chief-minister-indian-sign-language-i_KWDwb1ih.mp4",
@@ -19,7 +19,7 @@
           7,
           1
         ],
-        "inference_time_ms": 403.93
+        "inference_time_ms": 507.69
       },
       "ground_truth_segments": [
         {
@@ -92,7 +92,7 @@
                   6459,
                   1
                 ],
-                "inference_time_ms": 308.43,
+                "inference_time_ms": 399.23,
                 "is_rejected": false,
                 "rejection_reason": null,
                 "phase3_isolated_prediction": {
@@ -156,7 +156,7 @@
                   48,
                   1
                 ],
-                "inference_time_ms": 126.89,
+                "inference_time_ms": 124.85,
                 "is_rejected": false,
                 "rejection_reason": null,
                 "phase3_isolated_prediction": {
@@ -214,8 +214,8 @@
             },
             "performance": {
               "video_duration_seconds": 2.233,
-              "processing_time_seconds": 0.4368,
-              "realtime_factor": 5.11
+              "processing_time_seconds": 0.5256,
+              "realtime_factor": 4.25
             }
           },
           "timeline_chart": "D:\\Signova AI\\research\\segmentation\\results\\timeline_vidssavecom-president-prime-minister-chief-minister-indian-sign-language-i_KWDwb1ih_motion.png",
@@ -255,7 +255,7 @@
                   568,
                   1
                 ],
-                "inference_time_ms": 142.62,
+                "inference_time_ms": 119.66,
                 "is_rejected": false,
                 "rejection_reason": null,
                 "phase3_isolated_prediction": {
@@ -313,8 +313,8 @@
             },
             "performance": {
               "video_duration_seconds": 2.233,
-              "processing_time_seconds": 0.1442,
-              "realtime_factor": 15.49
+              "processing_time_seconds": 0.1209,
+              "realtime_factor": 18.47
             }
           },
           "timeline_chart": "D:\\Signova AI\\research\\segmentation\\results\\timeline_vidssavecom-president-prime-minister-chief-minister-indian-sign-language-i_KWDwb1ih_landmark.png",
@@ -361,7 +361,7 @@
                   25,
                   1
                 ],
-                "inference_time_ms": 170.68,
+                "inference_time_ms": 167.62,
                 "is_rejected": false,
                 "rejection_reason": null,
                 "phase3_isolated_prediction": {
@@ -423,7 +423,7 @@
                   25,
                   1
                 ],
-                "inference_time_ms": 111.93,
+                "inference_time_ms": 117.85,
                 "is_rejected": false,
                 "rejection_reason": null,
                 "phase3_isolated_prediction": {
@@ -481,8 +481,8 @@
             },
             "performance": {
               "video_duration_seconds": 2.233,
-              "processing_time_seconds": 0.284,
-              "realtime_factor": 7.86
+              "processing_time_seconds": 0.2877,
+              "realtime_factor": 7.76
             }
           },
           "timeline_chart": "D:\\Signova AI\\research\\segmentation\\results\\timeline_vidssavecom-president-prime-minister-chief-minister-indian-sign-language-i_KWDwb1ih_combined.png",
@@ -517,7 +517,7 @@
           270,
           1
         ],
-        "inference_time_ms": 185.19
+        "inference_time_ms": 167.49
       },
       "ground_truth_segments": [
         {
@@ -590,7 +590,7 @@
                   7532,
                   1
                 ],
-                "inference_time_ms": 150.66,
+                "inference_time_ms": 172.87,
                 "is_rejected": false,
                 "rejection_reason": null,
                 "phase3_isolated_prediction": {
@@ -658,7 +658,7 @@
                   909,
                   1
                 ],
-                "inference_time_ms": 178.72,
+                "inference_time_ms": 189.02,
                 "is_rejected": false,
                 "rejection_reason": null,
                 "phase3_isolated_prediction": {
@@ -717,7 +717,7 @@
                   7752,
                   1
                 ],
-                "inference_time_ms": 65.24,
+                "inference_time_ms": 59.3,
                 "is_rejected": false,
                 "rejection_reason": null,
                 "phase3_isolated_prediction": {
@@ -778,7 +778,7 @@
                   269,
                   1
                 ],
-                "inference_time_ms": 112.53,
+                "inference_time_ms": 107.86,
                 "is_rejected": false,
                 "rejection_reason": null,
                 "phase3_isolated_prediction": {
@@ -841,7 +841,7 @@
                   296,
                   1
                 ],
-                "inference_time_ms": 120.54,
+                "inference_time_ms": 108.95,
                 "is_rejected": false,
                 "rejection_reason": null,
                 "phase3_isolated_prediction": {
@@ -899,8 +899,8 @@
             },
             "performance": {
               "video_duration_seconds": 5.939,
-              "processing_time_seconds": 0.6328,
-              "realtime_factor": 9.39
+              "processing_time_seconds": 0.6433,
+              "realtime_factor": 9.23
             }
           },
           "timeline_chart": "D:\\Signova AI\\research\\segmentation\\results\\timeline_Learn-Indian-Sign-SnapYT.App (1) (online-video-cutter.com)_motion.png",
@@ -939,7 +939,7 @@
                   2612,
                   1
                 ],
-                "inference_time_ms": 131.06,
+                "inference_time_ms": 129.94,
                 "is_rejected": false,
                 "rejection_reason": null,
                 "phase3_isolated_prediction": {
@@ -999,7 +999,7 @@
                   431,
                   1
                 ],
-                "inference_time_ms": 83.25,
+                "inference_time_ms": 114.94,
                 "is_rejected": false,
                 "rejection_reason": null,
                 "phase3_isolated_prediction": {
@@ -1057,8 +1057,8 @@
             },
             "performance": {
               "video_duration_seconds": 5.939,
-              "processing_time_seconds": 0.2193,
-              "realtime_factor": 27.08
+              "processing_time_seconds": 0.2496,
+              "realtime_factor": 23.8
             }
           },
           "timeline_chart": "D:\\Signova AI\\research\\segmentation\\results\\timeline_Learn-Indian-Sign-SnapYT.App (1) (online-video-cutter.com)_landmark.png",
@@ -1100,7 +1100,7 @@
                   733,
                   1
                 ],
-                "inference_time_ms": 100.86,
+                "inference_time_ms": 122.1,
                 "is_rejected": false,
                 "rejection_reason": null,
                 "phase3_isolated_prediction": {
@@ -1166,7 +1166,7 @@
                   3085,
                   1
                 ],
-                "inference_time_ms": 162.13,
+                "inference_time_ms": 174.61,
                 "is_rejected": false,
                 "rejection_reason": null,
                 "phase3_isolated_prediction": {
@@ -1228,7 +1228,7 @@
                   577,
                   1
                 ],
-                "inference_time_ms": 106.73,
+                "inference_time_ms": 146.08,
                 "is_rejected": false,
                 "rejection_reason": null,
                 "phase3_isolated_prediction": {
@@ -1289,7 +1289,7 @@
                   8429,
                   1
                 ],
-                "inference_time_ms": 86.96,
+                "inference_time_ms": 121.45,
                 "is_rejected": false,
                 "rejection_reason": null,
                 "phase3_isolated_prediction": {
@@ -1347,8 +1347,8 @@
             },
             "performance": {
               "video_duration_seconds": 5.939,
-              "processing_time_seconds": 0.4619,
-              "realtime_factor": 12.86
+              "processing_time_seconds": 0.5694,
+              "realtime_factor": 10.43
             }
           },
           "timeline_chart": "D:\\Signova AI\\research\\segmentation\\results\\timeline_Learn-Indian-Sign-SnapYT.App (1) (online-video-cutter.com)_combined.png",
