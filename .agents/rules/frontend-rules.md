@@ -1,715 +1,505 @@
 # Frontend Development Rules
 
-# Signova AI
+## Signova AI
 
-These rules apply to all frontend development, UI implementation, component creation, styling, routing, state management, and API integration in Signova AI.
-
-The goal is to maintain a clean, responsive, accessible, and maintainable React application.
+**Project:** Signova AI  
+**Frontend Framework:** React  
+**Language:** JavaScript ES6+  
+**Build Tool:** Vite  
+**Styling:** CSS  
+**Backend:** Python + FastAPI  
+**API Communication:** Fetch API or Axios
 
 ---
 
-## 1. Frontend Technology Stack
+# 1. Core Frontend Principles
 
-Use the following technologies:
+All frontend development must follow these rules:
 
-| Category | Technology |
+1. Use React with JavaScript.
+2. Use Vite as the build tool.
+3. Use `.jsx` for React components.
+4. Use `.js` for JavaScript utility modules.
+5. Do not introduce TypeScript.
+6. Keep components reusable and focused.
+7. Separate UI, business logic, and API communication.
+8. Keep the interface responsive and accessible.
+9. Handle loading, success, empty, and error states.
+10. Do not create fake AI predictions or hardcoded recognition results.
+
+---
+
+# 2. Technology Rules
+
+| Area | Technology |
 |---|---|
-| Framework | React |
-| Language | JavaScript (ES6+) |
+| UI Framework | React |
+| Language | JavaScript ES6+ |
 | Build Tool | Vite |
-| Styling | Tailwind CSS |
-| UI Components | shadcn/ui |
-| Routing | React Router |
-| Icons | Lucide React |
+| Styling | CSS |
 | API Communication | Fetch API or Axios |
-| Testing | Vitest |
-| Component Testing | React Testing Library |
-| E2E Testing | Playwright |
+| Camera | Browser MediaDevices API |
+| Speech Output | Browser SpeechSynthesis API |
+| Testing | Vitest + React Testing Library |
 
-### Strict Rules
-
-- Use JavaScript, not TypeScript.
-- Use React functional components.
-- Use React Hooks.
-- Use Vite for the frontend build.
-- Use Tailwind CSS for styling.
-- Reuse shadcn/ui components where appropriate.
-- Use Lucide React for icons.
-- Do not introduce another frontend framework.
-- Do not migrate to Next.js without approval.
+Do not add another frontend framework or state-management library without a clear requirement.
 
 ---
 
-## 2. Project Structure
+# 3. Frontend Architecture
 
-Follow the existing frontend structure.
+Use a modular component-based structure.
 
-A recommended structure is:
+Suggested structure:
 
 ```text
 frontend/
 ├── public/
-│   └── assets/
-│
 ├── src/
 │   ├── assets/
-│   │
 │   ├── components/
-│   │   ├── ui/
-│   │   ├── common/
+│   │   ├── camera/
+│   │   │   ├── CameraPreview.jsx
+│   │   │   └── CameraControls.jsx
+│   │   ├── recognition/
+│   │   │   ├── RecognitionPanel.jsx
+│   │   │   └── RecognitionResult.jsx
+│   │   ├── speech/
+│   │   │   └── SpeechControls.jsx
 │   │   ├── layout/
-│   │   └── recognition/
-│   │
+│   │   │   ├── Header.jsx
+│   │   │   └── Footer.jsx
+│   │   └── common/
+│   │       ├── Button.jsx
+│   │       ├── Card.jsx
+│   │       └── StatusIndicator.jsx
 │   ├── pages/
-│   │
-│   ├── layouts/
-│   │
-│   ├── hooks/
-│   │
+│   │   └── Home.jsx
 │   ├── services/
-│   │   ├── api.js
-│   │   └── recognitionService.js
-│   │
+│   │   └── api.js
+│   ├── hooks/
 │   ├── context/
-│   │
 │   ├── utils/
-│   │
-│   ├── constants/
-│   │
 │   ├── styles/
-│   │
 │   ├── App.jsx
 │   └── main.jsx
-│
-├── tests/
-├── .env.example
 ├── index.html
-├── package.json
-└── vite.config.js
+└── package.json
 ```
 
-This is a recommended structure, not a requirement to create every directory immediately.
-
-### Structure Rules
-
-- Keep page components inside `pages/`.
-- Keep reusable components inside `components/`.
-- Keep API communication inside `services/`.
-- Keep reusable React hooks inside `hooks/`.
-- Keep shared constants inside `constants/`.
-- Keep general helper functions inside `utils/`.
-- Keep global styles inside `styles/`.
-- Avoid putting the entire application inside `App.jsx`.
-- Do not create duplicate directories with similar responsibilities.
+This is a suggested structure. Inspect the existing repository and reuse existing files before creating new ones.
 
 ---
 
-## 3. Naming Conventions
-
-Use consistent naming throughout the frontend.
-
-| Element | Convention | Example |
-|---|---|---|
-| React Components | PascalCase | `CameraPreview.jsx` |
-| Pages | PascalCase | `Dashboard.jsx` |
-| Hooks | camelCase with `use` | `useCamera.js` |
-| Services | camelCase | `recognitionService.js` |
-| Utilities | camelCase | `formatPrediction.js` |
-| Constants | UPPER_SNAKE_CASE | `API_BASE_URL` |
-| CSS Classes | Tailwind utilities | `flex items-center` |
-
-Use meaningful names.
-
-Avoid:
-
-```javascript
-const x = {};
-const d = [];
-function fn() {}
-```
-
-Prefer:
-
-```javascript
-const recognitionResult = {};
-const predictionHistory = [];
-
-function formatRecognitionResult() {}
-```
-
----
-
-## 4. React Component Rules
-
-### Component Design
+# 4. React Component Rules
 
 - Use functional components.
-- Keep components focused on one responsibility.
-- Prefer reusable components.
-- Keep business logic outside large UI components.
-- Avoid deeply nested JSX.
-- Avoid unnecessary component abstractions.
-- Use props to share data between components.
-- Use state only when necessary.
+- Use React Hooks where appropriate.
+- Keep components small and focused.
+- Avoid unnecessary component nesting.
+- Reuse common UI components.
+- Keep camera logic separate from recognition logic.
+- Keep speech logic separate from recognition logic.
+- Avoid putting the entire application in `App.jsx`.
+- Use meaningful component and variable names.
 
-Example:
-
-```jsx
-function RecognitionResult({ prediction, confidence }) {
-  return (
-    <section>
-      <h2>Recognition Result</h2>
-
-      <p>{prediction || "No sign detected"}</p>
-
-      {confidence !== null && (
-        <p>Confidence: {confidence}%</p>
-      )}
-    </section>
-  );
-}
-
-export default RecognitionResult;
-```
-
-### React Hooks
-
-Use hooks correctly:
-
-- `useState`
-- `useEffect`
-- `useCallback`
-- `useMemo`
-- `useRef`
-- Custom hooks when useful
-
-Rules:
-
-- Never call hooks conditionally.
-- Never call hooks inside loops.
-- Clean up event listeners and subscriptions.
-- Clean up camera streams when components unmount.
-- Avoid unnecessary effects.
-- Avoid storing values in state when they can be calculated.
+Do not create a separate component for every small HTML element unless reuse or clarity justifies it.
 
 ---
 
-## 5. UI Design Rules
+# 5. JavaScript Rules
 
-Signova AI must have a modern, clean, accessible, and professional interface.
+- Use modern JavaScript ES6+.
+- Use `const` by default.
+- Use `let` only when reassignment is required.
+- Use clear variable and function names.
+- Use `async/await` for asynchronous operations.
+- Handle rejected promises.
+- Avoid unnecessary global variables.
+- Avoid deeply nested callbacks.
+- Keep utility functions reusable.
+- Do not use TypeScript syntax.
 
-### Design Principles
-
-- Minimal and clean layouts.
-- Consistent spacing.
-- Clear typography.
-- Good colour contrast.
-- Responsive components.
-- Clear visual hierarchy.
-- Consistent border radius.
-- Subtle transitions.
-- Useful empty states.
-- Clear loading indicators.
-
-### Avoid
-
-- Excessive gradients.
-- Excessive shadows.
-- Too many colours.
-- Unnecessary animations.
-- Cluttered layouts.
-- Inconsistent spacing.
-- Random font combinations.
-- Decorative elements that reduce readability.
-
-### Design Consistency
-
-Before creating new UI components:
-
-1. Check existing components.
-2. Check the current design system.
-3. Reuse existing styles.
-4. Follow the project's UI guidelines.
-5. Avoid introducing a second design system.
-
-Follow `docs/UI_UX_GUIDELINES.md`.
+All frontend source code must use `.js` and `.jsx` files.
 
 ---
 
-## 6. Tailwind CSS Rules
+# 6. API Integration Rules
 
-Use Tailwind CSS for component styling.
+The frontend must communicate with FastAPI through service modules.
 
-Example:
-
-```jsx
-<div className="flex min-h-screen items-center justify-center p-6">
-  <div className="w-full max-w-4xl rounded-xl border p-6">
-    <h1 className="text-2xl font-semibold">
-      Signova AI
-    </h1>
-  </div>
-</div>
-```
-
-### Rules
-
-- Prefer utility classes.
-- Keep class names readable.
-- Reuse common design patterns.
-- Avoid excessive arbitrary values.
-- Use the project's existing colour tokens.
-- Use responsive breakpoints appropriately.
-- Avoid unnecessary inline styles.
-- Do not mix multiple styling frameworks.
-
-If a class combination becomes difficult to maintain, extract a reusable component or use an appropriate helper already present in the project.
-
----
-
-## 7. shadcn/ui Rules
-
-Use shadcn/ui components where they improve consistency and accessibility.
-
-Examples:
-
-- Button
-- Card
-- Dialog
-- Dropdown Menu
-- Input
-- Label
-- Select
-- Tabs
-- Tooltip
-- Alert
-- Badge
-- Skeleton
-- Toast or Sonner, depending on the existing setup
-
-### Rules
-
-- Reuse installed components.
-- Follow existing component conventions.
-- Do not repeatedly install duplicate UI components.
-- Customise components using project design tokens.
-- Preserve keyboard accessibility.
-- Do not replace an existing component without a clear reason.
-
----
-
-## 8. Routing Rules
-
-Use React Router.
-
-### Rules
-
-- Keep route definitions organised.
-- Use meaningful route paths.
-- Separate page components from reusable UI components.
-- Handle unknown routes.
-- Protect authenticated routes only when authentication is implemented.
-- Avoid unnecessary nested routes.
-
-Example:
-
-```jsx
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-
-import Home from "./pages/Home";
-import Dashboard from "./pages/Dashboard";
-import NotFound from "./pages/NotFound";
-
-function App() {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </BrowserRouter>
-  );
-}
-
-export default App;
-```
-
-Adapt the example to the actual application routes.
-
----
-
-## 9. State Management Rules
-
-Start with React's built-in state management.
-
-Use:
-
-- `useState` for local component state.
-- `useContext` for shared state when appropriate.
-- Custom hooks for reusable stateful logic.
-
-Do not introduce Redux, Zustand, or another state library unless the application genuinely needs it.
-
-### Rules
-
-- Keep state as close as practical to where it is used.
-- Avoid unnecessary global state.
-- Avoid duplicating the same state in multiple places.
-- Keep derived values out of state where possible.
-- Handle asynchronous state carefully.
-
----
-
-## 10. API Integration Rules
-
-All backend communication must go through the service layer.
-
-Recommended structure:
+Example structure:
 
 ```text
 src/
 └── services/
     ├── api.js
+    ├── healthService.js
     └── recognitionService.js
 ```
 
-### API Rules
+### Requirements
 
-- Do not hardcode backend URLs throughout components.
-- Use environment variables for API configuration.
-- Handle network errors.
-- Handle loading states.
-- Validate response assumptions.
-- Use consistent error messages.
-- Avoid duplicate API requests.
-- Never expose private API keys in frontend code.
+- Keep API calls outside presentation components where practical.
+- Use a central API base URL.
+- Use environment variables for backend URLs.
+- Handle network failures.
+- Handle non-success HTTP responses.
+- Validate response data before using it.
+- Avoid duplicate API logic.
+- Do not hardcode prediction responses.
 
-Example:
+Example environment variable:
+
+```env
+VITE_API_BASE_URL=http://localhost:8000
+```
+
+Example API service:
 
 ```javascript
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-export async function recogniseSign(imageBlob) {
-  if (!API_BASE_URL) {
-    throw new Error("API base URL is not configured.");
-  }
-
-  const formData = new FormData();
-  formData.append("image", imageBlob);
-
-  const response = await fetch(
-    `${API_BASE_URL}/recognition/predict`,
-    {
-      method: "POST",
-      body: formData,
-    }
-  );
+export async function checkBackendHealth() {
+  const response = await fetch(`${API_BASE_URL}/api/v1/health`);
 
   if (!response.ok) {
-    throw new Error("Sign recognition request failed.");
+    throw new Error("Backend health check failed");
   }
 
   return response.json();
 }
 ```
 
-This is an example only. Confirm the actual backend endpoint and request format before implementing it.
+Do not expose secrets in frontend environment variables.
+
+Only variables intended to be public should use the `VITE_` prefix.
 
 ---
 
-## 11. Camera Integration Rules
+# 7. Camera Integration Rules
 
-Camera functionality is a core part of Signova AI.
+Use the browser MediaDevices API for camera access.
 
-### Camera Requirements
+### Requirements
 
-- Use the browser MediaDevices API.
-- Request camera permission through a clear user action.
-- Handle denied permissions.
-- Handle unavailable cameras.
-- Provide start and stop controls.
-- Display a camera preview.
-- Clean up media tracks when the camera stops.
-- Handle component unmounting.
-- Do not access the camera without user permission.
-
-Example:
-
-```javascript
-async function startCamera(videoElement) {
-  if (!navigator.mediaDevices?.getUserMedia) {
-    throw new Error("Camera access is not supported.");
-  }
-
-  const stream = await navigator.mediaDevices.getUserMedia({
-    video: true,
-    audio: false,
-  });
-
-  videoElement.srcObject = stream;
-
-  return stream;
-}
-
-function stopCamera(stream) {
-  stream?.getTracks().forEach((track) => track.stop());
-}
-```
-
-Use the appropriate React hook or component lifecycle to manage the stream safely.
-
-### Camera Privacy
-
-- Do not record video by default.
-- Do not upload camera footage without consent.
-- Do not leave camera streams running after the user stops recognition.
-- Make camera activity visible to the user.
-
----
-
-## 12. Recognition Interface Rules
-
-The recognition interface must clearly communicate the current application state.
-
-### Required States
-
-| State | UI Behaviour |
-|---|---|
-| Idle | Show instructions and start action |
-| Permission Required | Explain camera permission |
-| Camera Active | Show live camera preview |
-| Processing | Show processing indicator |
-| Prediction Available | Display recognised output |
-| Low Confidence | Indicate uncertain prediction |
-| No Sign Detected | Show helpful guidance |
-| Error | Display a clear error message |
-
-### Prediction Display
-
-- Display the recognised label clearly.
-- Show confidence only when the backend supplies a valid confidence value.
-- Do not invent confidence scores.
-- Do not display unsupported labels.
-- Avoid repeated duplicate results where appropriate.
-- Provide a clear way to reset or start another recognition.
+- Request camera access only after user interaction.
+- Handle permission denial.
+- Handle missing cameras.
+- Handle camera startup errors.
+- Display the live camera stream.
+- Stop camera tracks when the camera is stopped.
+- Clean up streams when the component unmounts.
+- Avoid creating multiple unnecessary camera streams.
 
 ### Important
 
-The frontend must reflect the actual capability of the connected model.
+The frontend is responsible for browser camera access.
 
-If the backend supports only alphabet recognition, do not display the result as a complete ISL sentence translation.
+The backend receives only the input required for recognition.
+
+Do not assume that every AI model accepts raw camera frames. Check the selected model's input requirements before implementing frame submission.
 
 ---
 
-## 13. Speech Output Rules
+# 8. Recognition Integration Rules
 
-Speech output is optional and should be implemented only when supported by the backend or an approved speech service.
+The frontend must display actual backend predictions.
 
 ### Requirements
 
-- Provide a clear speak button.
-- Allow users to stop speech where supported.
-- Handle unavailable speech services.
-- Do not block recognised text when speech fails.
-- Avoid automatically speaking every repeated prediction.
-- Do not expose provider API keys in the browser.
+- Show recognition status.
+- Show processing feedback.
+- Display returned prediction text.
+- Handle empty predictions.
+- Handle unsupported inputs.
+- Handle backend failures.
+- Avoid showing stale results as new predictions.
+- Do not invent confidence scores.
+- Do not combine isolated predictions and describe them as continuous ISL translation.
 
-The frontend must not claim that speech output is available until the corresponding feature is implemented.
-
----
-
-## 14. Accessibility Rules
-
-Accessibility is a core requirement of Signova AI.
-
-Follow these practices:
-
-- Use semantic HTML.
-- Provide accessible labels.
-- Use keyboard-accessible controls.
-- Maintain sufficient colour contrast.
-- Provide visible focus states.
-- Avoid colour-only status indicators.
-- Use appropriate ARIA attributes when necessary.
-- Support screen readers.
-- Use readable font sizes.
-- Provide understandable error messages.
-
-Test the interface with keyboard navigation and relevant accessibility tools.
+The UI must reflect the actual capabilities of the connected model.
 
 ---
 
-## 15. Responsive Design Rules
+# 9. Speech Output Rules
 
-The application must support:
+Use the browser SpeechSynthesis API for basic text-to-speech.
+
+### Requirements
+
+- Speak only available recognition text.
+- Provide a stop action.
+- Handle unsupported browser functionality.
+- Prevent repeated speech requests from overlapping unexpectedly.
+- Show the current speech status.
+- Cancel speech when appropriate during component cleanup.
+
+Speech output is not the same as sign language recognition. Keep the two features separate.
+
+---
+
+# 10. State Management Rules
+
+Use React state and hooks for local UI state.
+
+Examples:
+
+- Camera active or inactive.
+- Recognition loading.
+- Current prediction.
+- API connection status.
+- Speech playing or stopped.
+- Error messages.
+
+### Requirements
+
+- Keep state close to the component that uses it.
+- Lift state only when multiple components need it.
+- Avoid unnecessary global state.
+- Avoid duplicated state.
+- Do not store values that can be derived from existing state.
+- Clean up event listeners and media resources.
+
+Do not introduce Redux or another state library unless the application genuinely requires it.
+
+---
+
+# 11. UI/UX Rules
+
+Follow `UI_UX_GUIDELINES.md`.
+
+The interface must be:
+
+- Clean.
+- Modern.
+- Minimal.
+- Responsive.
+- Accessible.
+- Consistent.
+
+Use the established white and teal visual identity.
+
+Prioritise:
+
+1. Camera preview.
+2. Recognition controls.
+3. Recognition result.
+4. Speech controls.
+5. System and model status.
+
+Avoid unnecessary dashboard elements or decorative sections that distract from recognition.
+
+---
+
+# 12. Responsive Design Rules
+
+Support:
 
 - Desktop.
-- Laptop.
 - Tablet.
-- Mobile devices.
-
-Use Tailwind responsive breakpoints.
-
-Example:
-
-```jsx
-<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-  {/* Responsive content */}
-</div>
-```
+- Mobile.
 
 ### Requirements
 
-- Avoid horizontal overflow.
-- Keep camera preview usable on smaller screens.
-- Ensure buttons remain easy to tap.
-- Keep text readable.
-- Adapt navigation for smaller screens.
-- Test the layout at different viewport sizes.
+- Use flexible layouts.
+- Use CSS Grid and Flexbox where appropriate.
+- Avoid fixed widths that break smaller screens.
+- Prevent horizontal overflow.
+- Keep camera controls accessible.
+- Make result text readable.
+- Test important screen sizes.
+
+Do not hide essential recognition controls on mobile.
 
 ---
 
-## 16. Loading and Error States
+# 13. Accessibility Rules
 
-Every asynchronous feature must provide feedback.
+- Use semantic HTML.
+- Add labels to form controls.
+- Add accessible names to icon buttons.
+- Support keyboard navigation.
+- Maintain visible focus states.
+- Use sufficient colour contrast.
+- Provide meaningful error messages.
+- Avoid colour-only status indicators.
+- Respect reduced-motion preferences.
+- Ensure interactive elements have suitable touch targets.
 
-Examples:
-
-- Camera initialisation.
-- Backend requests.
-- Recognition processing.
-- Speech generation.
-- Model availability checks.
-
-Use consistent loading indicators and error messages.
-
-Do not leave users with a blank screen when something fails.
-
-Do not expose raw backend stack traces or sensitive technical information in the UI.
+Accessibility must be considered during development, not added only at the end.
 
 ---
 
-## 17. Performance Rules
+# 14. Error and Loading States
 
-- Avoid unnecessary component re-renders.
-- Use `useMemo` and `useCallback` only when useful.
-- Avoid processing every video frame without need.
-- Use suitable frame sampling based on model requirements.
-- Avoid unnecessary image conversions.
-- Revoke temporary object URLs when no longer needed.
-- Clean up event listeners and camera streams.
-- Avoid loading large assets unnecessarily.
-- Keep initial page loading fast.
+Every asynchronous action must provide feedback.
 
-Measure performance before making claims about improvements.
+### Loading
 
----
+Show a clear loading indicator during API requests and recognition.
 
-## 18. Environment Variables
+### Success
 
-Use Vite environment variables for frontend configuration.
+Display the actual returned result.
 
-Example `.env.example`:
+### Empty
 
-```env
-VITE_API_BASE_URL=http://localhost:8000
-```
+Explain when no recognition result is available.
 
-### Rules
+### Error
 
-- Only expose values that are safe for browser access.
-- Never store private API keys in `VITE_` variables.
-- Never commit real `.env` files.
-- Keep `.env.example` updated.
-- Do not hardcode production service URLs in components.
+Show a short, useful message.
+
+### Offline
+
+Indicate when the backend cannot be reached.
+
+Do not expose internal server errors or stack traces to users.
 
 ---
 
-## 19. Testing Rules
+# 15. Performance Rules
 
-Use the project's configured testing tools.
+- Avoid unnecessary React re-renders.
+- Avoid unnecessary API requests.
+- Process camera frames at a controlled rate.
+- Release media streams when no longer needed.
+- Avoid loading unnecessary libraries.
+- Optimise images and static assets.
+- Use memoisation only when it provides a real benefit.
+- Avoid blocking the main UI thread with expensive processing.
 
-### Required Testing Areas
+Do not send every camera frame to the backend without considering the model's processing requirements and system performance.
+
+---
+
+# 16. Security and Privacy Rules
+
+- Do not store camera footage by default.
+- Do not expose backend secrets.
+- Do not trust frontend validation alone.
+- Avoid unsafe HTML rendering.
+- Use HTTPS in production.
+- Do not log sensitive user media.
+- Handle API errors safely.
+- Request only necessary browser permissions.
+
+The application must clearly communicate when the camera is active.
+
+---
+
+# 17. Testing Rules
+
+Use Vitest and React Testing Library.
+
+Test:
 
 - Component rendering.
-- User interactions.
-- Camera permission handling.
-- Camera start and stop.
-- API request handling.
-- Loading states.
-- Error states.
-- Recognition result rendering.
-- Responsive layouts.
-- Accessibility.
+- Button interactions.
+- Camera permission states.
+- Camera cleanup.
+- API success responses.
+- API failure responses.
+- Recognition loading states.
+- Recognition result display.
+- Speech controls.
+- Responsive behaviour where practical.
+- Accessibility basics.
 
-### Example Commands
+Mock browser APIs and backend requests where needed.
 
-Check the scripts in `package.json` before running:
-
-```bash
-npm run lint
-npm run test
-npm run build
-```
-
-Do not report tests as passed unless they have actually been executed.
+Do not report mocked API tests as real backend or AI model validation.
 
 ---
 
-## 20. Security Rules
+# 18. Dependency Rules
 
-- Never expose backend credentials.
-- Never expose Sarvam API keys.
-- Validate data received from the backend.
-- Avoid rendering untrusted HTML.
-- Do not use unsafe DOM manipulation.
-- Use secure production connections.
-- Restrict browser camera access to user-approved actions.
-- Avoid storing sensitive user information unnecessarily.
-- Follow the project's `docs/SECURITY.md`.
+- Keep dependencies minimal.
+- Check existing packages before installing new ones.
+- Avoid duplicate libraries.
+- Use compatible package versions.
+- Do not install a UI library without a clear need.
+- Keep package scripts organised.
+- Verify the build after dependency changes.
 
----
-
-## 21. Documentation Rules
-
-When frontend implementation changes, update relevant documentation.
-
-Examples:
-
-- `docs/FEATURES.md`
-- `docs/UI_UX_GUIDELINES.md`
-- `docs/SYSTEM_ARCHITECTURE.md`
-- `docs/API_DOCUMENTATION.md`
-- `docs/TESTING_STRATEGY.md`
-- `docs/PROGRESS_TRACKER.md`
-
-Do not document unimplemented features as completed.
+Do not replace existing working tools without a technical reason.
 
 ---
 
-## 22. Frontend Definition of Done
+# 19. Development Workflow
 
-A frontend task is complete only when:
+Follow this order:
 
-- [ ] The feature is implemented.
-- [ ] Existing functionality still works.
-- [ ] Components follow project conventions.
-- [ ] JavaScript is used instead of TypeScript.
-- [ ] Responsive behaviour is checked.
-- [ ] Accessibility is considered.
-- [ ] Loading and error states are handled.
-- [ ] API integration uses the actual backend contract.
-- [ ] Relevant tests are executed.
-- [ ] Build succeeds.
-- [ ] Documentation is updated where necessary.
+### Phase 1: Frontend Foundation
+
+- Set up React and Vite.
+- Configure CSS.
+- Create the main application layout.
+- Add reusable UI components.
+
+### Phase 2: Camera Interface
+
+- Implement camera permission handling.
+- Display the camera preview.
+- Add start and stop controls.
+- Handle camera errors.
+
+### Phase 3: Backend Connection
+
+- Configure the API base URL.
+- Create service modules.
+- Connect health endpoints.
+- Handle loading and network errors.
+
+### Phase 4: Recognition Interface
+
+- Connect supported prediction endpoints.
+- Send compatible input.
+- Display actual predictions.
+- Handle unsupported model capabilities.
+
+### Phase 5: Speech Output
+
+- Add SpeechSynthesis support.
+- Add speak and stop controls.
+- Handle browser compatibility.
+
+### Phase 6: Testing and Polish
+
+- Test important interactions.
+- Test responsive layouts.
+- Check accessibility.
+- Verify production build.
 
 ---
 
-## 23. Final Rule
+# 20. Strict Rules for Antigravity
 
-Build the Signova AI frontend with a clear focus on accessibility, usability, reliability, and maintainability.
+Before making frontend changes:
 
-**Prioritise a working camera-to-recognition experience over decorative UI features.**
+1. Inspect the existing frontend structure.
+2. Read `UI_UX_GUIDELINES.md`.
+3. Read `TECH_STACK.md`.
+4. Read the API documentation.
+5. Reuse existing components and services.
+6. Do not create duplicate files.
+7. Do not introduce TypeScript.
+8. Do not hardcode fake recognition results.
+9. Do not assume unsupported AI capabilities.
+10. Do not change backend contracts without agreement.
+11. Do not delete existing files without approval.
+12. Do not install unnecessary dependencies.
+13. Do not claim features work without testing them.
+14. Keep code, comments, and tests in English.
+15. Update relevant documentation when implementation changes.
 
-Never create a frontend feature that pretends to work when the required backend or AI model functionality does not exist.
+If a backend endpoint or AI model is not ready, build an honest loading, unavailable, or error state instead of simulating a successful result.
+
+---
+
+# 21. Final Frontend Goal
+
+The Signova AI frontend must provide a smooth and accessible experience for capturing signing input, displaying genuine recognition results, and converting available text into speech.
+
+**The frontend must reflect the real backend and AI capabilities. It must never hide model limitations behind fake UI behaviour.**

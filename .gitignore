@@ -17,7 +17,7 @@ node_modules/
 dist/
 .npm/
 
-# Model checkpoints and weights (keep directories via .gitkeep)
+# Model checkpoints and weights
 *.pt
 *.pth
 *.ckpt
@@ -25,12 +25,27 @@ dist/
 *.bin
 *.onnx
 *.safetensors
-!**/checkpoints/.gitkeep
+*.joblib
+*.task
+!**/models/**/.gitkeep
+!**/models/README.md
+
+# Datasets and Media
+datasets/samples/
+datasets/annotations/
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.webm
+*.npy
+!**/datasets/README.md
 
 # Temporary files and uploads
 uploads/
 temp/
 tmp/
+.cache/
 
 # Logs
 *.log
@@ -40,4 +55,3 @@ tmp/
 .idea/
 .DS_Store
 Thumbs.db
-

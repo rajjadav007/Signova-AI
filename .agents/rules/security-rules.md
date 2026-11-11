@@ -1,803 +1,411 @@
 # Security Development Rules
 
-# Signova AI
+## Signova AI
 
-These rules apply to all security-related development across the Signova AI frontend, backend, AI/ML pipeline, APIs, database, external services, and deployment environments.
-
-The primary objective is to protect users, their data, camera access, application credentials, and AI model assets.
-
-Security and privacy must be considered throughout development, not added only before deployment.
+**Project:** Signova AI  
+**Security Scope:** Frontend, Backend, AI/ML, Data, and Deployment  
+**Backend:** Python + FastAPI  
+**Frontend:** React + JavaScript + Vite  
+**AI Framework:** PyTorch
 
 ---
 
-## 1. Security Principles
+# 1. Core Security Principles
 
 All development must follow these principles:
 
-1. Privacy by default.
-2. Minimum data collection.
-3. Secure credential management.
-4. Explicit camera and microphone permissions.
-5. Secure API communication.
-6. Input validation.
-7. Safe AI model loading.
-8. Controlled data storage.
-9. Least-privilege access.
-10. Secure error handling.
-11. Dependency security.
-12. Transparent external service usage.
-
-### Mandatory Rules
-
-- Never expose secrets in frontend code.
-- Never commit credentials.
-- Never collect unnecessary personal information.
-- Never record camera footage without clear user consent.
-- Never trust client-side validation alone.
-- Never load untrusted model checkpoints.
-- Never expose internal server errors.
-- Never store sensitive data without a clear requirement.
+1. Protect user privacy.
+2. Never expose secrets or credentials.
+3. Validate all external input.
+4. Use secure file handling.
+5. Protect camera and media data.
+6. Restrict API access appropriately.
+7. Keep dependencies updated.
+8. Avoid unnecessary data collection.
+9. Handle errors without exposing internal details.
+10. Never compromise security for convenience.
 
 ---
 
-## 2. Security Technology Stack
+# 2. User Privacy and Camera Security
 
-Use the following security practices with the existing project stack.
+Camera access is a sensitive feature of Signova AI.
 
-| Area | Security Requirement |
-|---|---|
-| Frontend | Secure React implementation |
-| Backend | FastAPI validation and controlled access |
-| Authentication | Secure authentication when required |
-| API | HTTPS and request validation |
-| Database | Restricted access and secure credentials |
-| AI Models | Verified model sources and safe checkpoint loading |
-| Secrets | Environment variables |
-| Dependencies | Version control and vulnerability checks |
-| Deployment | Secure environment configuration |
-| Testing | Security and privacy tests |
+### Requirements
 
-Do not introduce additional security tools without a clear requirement.
+- Request camera permission only after user interaction.
+- Clearly indicate when the camera is active.
+- Provide an option to stop the camera.
+- Stop all camera tracks when the camera is stopped.
+- Stop camera tracks when the relevant component unmounts.
+- Do not record or store video by default.
+- Do not send camera footage to external services without explicit approval.
+- Send only the data required by the recognition model.
+- Do not log raw images, videos, or landmarks containing user data.
 
----
+### Privacy Rule
 
-## 3. Camera and Microphone Privacy
+Camera data must be processed only for the requested recognition task.
 
-Camera access is a core feature of Signova AI.
-
-The application must respect the user's control over camera and microphone access.
-
-### Camera Rules
-
-- Request permission only when camera functionality is needed.
-- Start camera access only after an appropriate user action.
-- Show a visible camera-active state.
-- Provide a clear stop-camera action.
-- Handle denied permissions.
-- Handle unavailable cameras.
-- Stop all active media tracks when the camera is stopped.
-- Stop media tracks when the relevant component is unmounted.
-- Do not access cameras in the background without a clear user-approved feature.
-
-### Microphone Rules
-
-If speech functionality requires microphone access:
-
-- Request microphone permission explicitly.
-- Explain why microphone access is needed.
-- Show when microphone capture is active.
-- Provide a stop-recording action.
-- Stop microphone tracks when recording ends.
-- Do not record audio in the background without explicit consent.
-
-### Recording Rules
-
-- Do not record video by default.
-- Do not persist raw camera recordings by default.
-- Do not upload video or audio without user consent.
-- Do not send recordings to third-party services without explaining the purpose.
-- Delete temporary files when they are no longer needed.
-- Never use camera or microphone access for unrelated purposes.
-
-### Important
-
-Camera permission from the browser is not permission to store or share the user's recordings.
+Do not introduce background recording or hidden media collection.
 
 ---
 
-## 4. Personal Data Protection
+# 3. API Security
 
-Collect only information necessary for the requested functionality.
+All backend endpoints must validate incoming requests.
 
-### Potential Data Categories
+### Requirements
 
-| Data | Security Requirement |
-|---|---|
-| Camera frames | Process for recognition, avoid persistence by default |
-| Microphone input | Use only for requested speech features |
-| Recognised text | Store only when required and permitted |
-| User account data | Protect with authentication and access controls |
-| Preferences | Store only necessary settings |
-| Recognition history | Require a clear purpose and user consent |
-| API credentials | Keep exclusively on the backend |
-
-### Rules
-
-- Do not collect unnecessary personal information.
-- Avoid storing raw video and audio.
-- Avoid storing biometric information unnecessarily.
-- Do not expose user-specific records to other users.
-- Provide clear information about data collection.
-- Define retention periods for stored data.
-- Delete data when no longer needed, subject to applicable legal requirements.
-- Do not use personal recordings to train models without appropriate consent and permissions.
-
----
-
-## 5. Environment Variables and Secret Management
-
-All private credentials must be stored securely.
-
-### Examples of Secrets
-
-- Sarvam AI API key.
-- Database credentials.
-- Authentication secrets.
-- Access tokens.
-- Third-party service credentials.
-- Deployment credentials.
-
-### Mandatory Rules
-
-- Never hardcode API keys.
-- Never place private credentials in React components.
-- Never expose private credentials through `VITE_` environment variables.
-- Never commit `.env` files.
-- Never print secrets in logs.
-- Never include credentials in screenshots or public issues.
-- Use hosting-provider secret management for production.
-- Rotate credentials if they are exposed.
-
-### Example `.env.example`
-
-```env
-APP_ENV=development
-
-FRONTEND_URL=http://localhost:5173
-
-DATABASE_URL=
-
-SARVAM_API_KEY=
-
-SECRET_KEY=
-
-MODEL_PATH=
-```
-
-These are example variables only. Use the actual configuration required by the application.
-
-### Git Protection
-
-Ensure `.gitignore` includes:
-
-```gitignore
-.env
-.env.*
-!.env.example
-
-venv/
-.venv/
-
-__pycache__/
-*.pyc
-
-node_modules/
-dist/
-
-*.log
-
-*.pt
-*.pth
-*.ckpt
-*.pkl
-*.pickle
-```
-
-Model checkpoints should only be ignored if the repository uses external model storage or another approved approach. Do not accidentally exclude required, intentionally tracked model assets.
-
----
-
-## 6. Frontend Security Rules
-
-The React frontend must not be treated as a trusted environment.
-
-### Rules
-
-- Never store private API keys in frontend code.
-- Never store passwords in local storage.
-- Avoid storing sensitive authentication tokens in browser storage.
-- Do not render untrusted HTML.
-- Avoid unsafe DOM manipulation.
-- Validate data received from the backend.
-- Use HTTPS in production.
-- Avoid exposing internal backend errors.
-- Do not place secrets in URLs.
-- Avoid unnecessary browser permissions.
-
-### Cross-Site Scripting (XSS)
-
-- Use React's normal escaping behaviour.
-- Avoid `dangerouslySetInnerHTML`.
-- If HTML rendering is genuinely required, use a trusted sanitisation approach.
-- Never insert unsanitised user input into HTML.
-- Validate content received from external services.
-
-### Content Security
-
-Use an appropriate Content Security Policy in production.
-
-Restrict:
-
-- Script sources.
-- Image sources.
-- API connections.
-- Font sources.
-- Frame sources.
-- Other resource origins.
-
-Configure the policy to match the actual application. Do not break required camera, API, or asset functionality.
-
----
-
-## 7. Backend Security Rules
-
-The FastAPI backend must validate and protect every incoming request.
-
-### Rules
-
-- Validate all request data.
-- Use Pydantic schemas.
-- Restrict request sizes.
+- Validate request bodies using Pydantic.
 - Validate uploaded files.
-- Use controlled error responses.
-- Avoid exposing stack traces.
-- Restrict CORS origins.
-- Apply rate limits where appropriate.
-- Protect sensitive endpoints.
-- Avoid trusting client-provided user identifiers.
+- Restrict supported file formats.
+- Apply reasonable upload size limits.
+- Handle malformed requests safely.
+- Use suitable HTTP status codes.
+- Avoid exposing internal server details.
+- Add rate limiting when required by deployment conditions.
+
+Never trust frontend validation as the only security layer.
+
+---
+
+# 4. CORS Security
+
+Configure Cross-Origin Resource Sharing carefully.
+
+### Development
+
+Allow only the required local frontend origin.
+
+```text
+http://localhost:5173
+```
+
+### Production
+
+- Allow only approved production domains.
+- Avoid wildcard origins.
+- Restrict HTTP methods.
+- Restrict request headers.
+- Do not enable credential sharing unnecessarily.
+
+Keep allowed origins in backend configuration.
+
+---
+
+# 5. Secrets and Environment Variables
+
+Never hardcode secrets in source code.
+
+Sensitive configuration includes:
+
+- API keys.
+- Database passwords.
+- Authentication secrets.
+- Private service tokens.
+- External provider credentials.
+
+### Requirements
+
+- Use environment variables.
+- Keep `.env` out of Git.
+- Provide `.env.example` without real credentials.
+- Never expose backend secrets through frontend code.
+- Never commit credentials in documentation or logs.
+- Rotate credentials if they are accidentally exposed.
+
+### Frontend Rule
+
+Vite variables beginning with `VITE_` are exposed to browser code.
+
+Never store private credentials in `VITE_` variables.
+
+---
+
+# 6. File Upload Security
+
+If image or video upload is implemented:
+
+- Validate file size.
+- Validate file extension.
+- Validate MIME type.
+- Do not trust the original filename.
+- Generate safe temporary filenames.
+- Store temporary files outside public directories.
+- Prevent path traversal.
+- Delete temporary files after processing.
+- Reject unsupported or malformed files.
+- Avoid executing uploaded content.
+
+Do not permanently store uploaded media unless a clearly approved feature requires it.
+
+---
+
+# 7. AI Model Security
+
+AI model files and inference pipelines must be handled carefully.
+
+### Model Files
+
+- Download models from trusted sources.
+- Verify model repository identity.
+- Review model licences.
+- Avoid loading untrusted model files.
+- Keep checkpoints outside Git.
+- Restrict write access to model directories.
+- Avoid exposing local model paths through APIs.
+
+### PyTorch Security
+
+- Prefer safer model formats where supported.
+- Do not load untrusted pickle-based checkpoints.
+- Use `weights_only=True` when compatible with the checkpoint and installed PyTorch version.
+- Do not disable model-loading safety checks without a documented reason.
+- Review custom model-loading code before execution.
+
+### Inference Security
+
+- Validate all model inputs.
+- Restrict input dimensions and sequence lengths.
+- Apply reasonable processing limits.
+- Handle malformed landmarks.
+- Avoid unrestricted resource consumption.
+- Never execute user-provided code or model instructions.
+
+---
+
+# 8. Dataset Security and Licensing
+
+Before using any dataset:
+
+- Verify its source.
+- Review its licence.
+- Check usage restrictions.
+- Avoid downloading unknown executable files.
+- Preserve original data.
+- Restrict access to local datasets.
+- Do not upload restricted datasets to public repositories.
+
+Public availability does not automatically mean unrestricted usage.
+
+Respect attribution, non-commercial, and share-alike requirements where applicable.
+
+---
+
+# 9. Frontend Security
+
+The React frontend must follow these rules:
+
+- Avoid unsafe HTML rendering.
+- Do not use `dangerouslySetInnerHTML` unless strictly necessary and safely sanitised.
+- Validate data received from the backend.
+- Do not expose private configuration.
+- Avoid storing sensitive information in browser storage.
+- Handle API errors safely.
 - Use HTTPS in production.
+- Do not include secrets in client-side source code.
+- Avoid untrusted external scripts.
 
-### Input Validation
+Use normal React rendering for recognition output.
 
-Validate:
+Do not execute or interpret model predictions as HTML or JavaScript.
 
-- Data types.
-- Required fields.
-- File sizes.
-- Image formats.
-- Image dimensions.
-- Text lengths.
-- Query parameters.
-- Request payload structure.
+---
 
-Do not assume that frontend validation makes backend validation unnecessary.
+# 10. Authentication and Authorisation
+
+Authentication is not required for the initial MVP unless explicitly approved.
+
+If authentication is added later:
+
+- Use a trusted authentication mechanism.
+- Never store plaintext passwords.
+- Validate authentication tokens on the backend.
+- Protect private endpoints.
+- Apply suitable session expiration.
+- Restrict access to user-specific records.
+- Do not rely on frontend-only access checks.
+
+Do not add authentication or user accounts without a product requirement.
+
+---
+
+# 11. Database Security
+
+PostgreSQL is optional for the initial MVP.
+
+If introduced:
+
+- Keep credentials in environment variables.
+- Use parameterised queries or a suitable ORM.
+- Restrict database permissions.
+- Validate stored data.
+- Avoid storing raw camera footage.
+- Protect personal information.
+- Use migrations for schema changes.
+- Do not expose database errors to users.
+- Back up data securely when persistent storage is required.
+
+Basic sign recognition must not depend on a database.
+
+---
+
+# 12. Error Handling and Logging
 
 ### Error Handling
 
-Never return:
+- Return safe and understandable error messages.
+- Do not expose stack traces.
+- Do not reveal internal paths.
+- Do not expose environment variables.
+- Do not reveal database credentials.
+- Handle unexpected exceptions safely.
 
-- Internal stack traces.
-- Database credentials.
-- File system paths.
+### Logging
+
+Log useful technical events:
+
+- Application startup.
+- Model loading status.
+- API failures.
+- Processing errors.
+- Unexpected exceptions.
+
+Never log:
+
+- Passwords.
 - API keys.
-- Authentication secrets.
-- Internal model configuration.
-
-Log useful diagnostic information securely on the backend.
-
----
-
-## 8. API Security
-
-All API communication must follow secure practices.
-
-### API Rules
-
-- Use HTTPS in production.
-- Validate request bodies.
-- Validate query parameters.
-- Use appropriate HTTP methods.
-- Use appropriate HTTP status codes.
-- Restrict access to protected resources.
-- Apply rate limits where necessary.
-- Configure request timeouts.
-- Reject malformed requests.
-- Avoid unnecessary API permissions.
-
-### CORS
-
-Configure CORS using approved frontend origins.
-
-Example:
-
-```python
-from fastapi.middleware.cors import CORSMiddleware
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",
-    ],
-    allow_credentials=False,
-    allow_methods=["GET", "POST"],
-    allow_headers=["Content-Type", "Authorization"],
-)
-```
-
-This is a development-oriented example. Adjust the configuration to the actual authentication method and production domains.
-
-Do not use unrestricted wildcard origins with credentials.
-
-### Rate Limiting
-
-Consider rate limits for:
-
-- Recognition requests.
-- Image uploads.
-- Speech generation.
-- Authentication endpoints.
-- Other resource-intensive operations.
-
-Use limits appropriate to the actual application workload.
-
-Do not introduce unnecessary infrastructure just to implement rate limiting.
+- Authentication tokens.
+- Raw camera footage.
+- Sensitive user data.
+- Unnecessary request payloads.
 
 ---
 
-## 9. Authentication and Authorisation
+# 13. Dependency Security
 
-Authentication should be implemented only when required by the approved product scope.
+All project dependencies must be reviewed.
 
-### If Authentication Is Implemented
-
-- Use a trusted authentication approach.
-- Never store plaintext passwords.
-- Use an appropriate password hashing algorithm.
-- Validate tokens on protected endpoints.
-- Apply appropriate token expiration.
-- Protect user-specific resources.
-- Enforce ownership checks.
-- Use secure cookie settings when cookie-based authentication is used.
-- Implement logout and token invalidation appropriately.
-
-### Authorisation Rules
-
-- Do not trust user IDs supplied by the frontend.
-- Verify access to every user-specific resource.
-- Prevent users from accessing another user's history or preferences.
-- Apply least-privilege access.
-- Do not expose administrative functions to normal users.
-
-Do not introduce authentication solely for appearance or architectural complexity.
-
----
-
-## 10. Database Security
-
-PostgreSQL is optional and should only be introduced when persistent storage is needed.
-
-### Database Rules
-
-- Store credentials in environment variables.
-- Restrict database network access.
-- Use separate development and production databases.
-- Validate database input.
-- Use parameterised queries or safe ORM operations.
-- Avoid dynamically constructed SQL from untrusted input.
-- Use database transactions where appropriate.
-- Apply least-privilege database permissions.
-- Keep database migrations controlled.
-- Back up important production data securely.
-
-### Sensitive Data
-
-- Do not store raw camera recordings by default.
-- Do not store unnecessary biometric information.
-- Avoid storing unnecessary recognition history.
-- Protect user-specific records.
-- Apply retention and deletion policies.
-
-### Database Error Handling
-
-Never expose:
-
-- SQL queries containing sensitive values.
-- Database connection strings.
-- Database passwords.
-- Internal schema details that should remain private.
-- Raw database stack traces.
-
----
-
-## 11. AI Model and Checkpoint Security
-
-AI model integration introduces additional security risks.
-
-### Model Source Verification
-
-Before downloading a model:
-
-1. Verify the original repository.
-2. Check the model owner.
-3. Check the model licence.
-4. Inspect the model files.
-5. Check available checkpoint formats.
-6. Review model-loading code.
-7. Check dependencies.
-8. Verify that the model supports ISL.
-9. Avoid executing unknown scripts.
-10. Document the source.
-
-### Checkpoint Security
-
-- Prefer Safetensors where supported.
-- Avoid untrusted pickle-based checkpoints.
-- Use `torch.load(..., weights_only=True)` when compatible with the checkpoint and PyTorch version.
-- Verify checkpoint compatibility.
-- Avoid arbitrary checkpoint downloads at runtime.
-- Do not execute checkpoint contents as code.
-- Keep model paths configurable.
-- Restrict write access to model directories.
-
-### Model Integrity
-
-Where possible:
-
-- Record the model source.
-- Record the model version.
-- Record the checkpoint hash.
-- Verify the checkpoint before loading.
-- Keep model metadata documented.
-
-Never claim a checkpoint is safe simply because it is hosted on GitHub or Hugging Face.
-
----
-
-## 12. AI Prediction and User Safety
-
-Recognition results must be presented responsibly.
-
-### Rules
-
-- Do not invent predictions.
-- Do not invent confidence scores.
-- Do not present uncertain predictions as confirmed.
-- Do not hide recognition failures.
-- Do not claim complete ISL interpretation when only limited signs are supported.
-- Handle unsupported signs explicitly.
-- Document known model limitations.
-
-### Accessibility Considerations
-
-- Make uncertainty understandable.
-- Avoid misleading users with incorrect output.
-- Do not imply that the application replaces a qualified human interpreter.
-- Do not claim universal accuracy.
-- Explain the supported sign vocabulary where appropriate.
-
----
-
-## 13. External Service Security
-
-Signova AI may use external services such as Sarvam AI for supported speech and language functionality.
-
-### Rules
-
-- Use official provider documentation.
-- Keep API credentials on the backend.
-- Verify supported endpoints.
-- Verify request and response formats.
-- Use network timeouts.
-- Handle provider errors.
-- Check pricing and usage limits.
-- Avoid sending unnecessary user data.
-- Use only the data required for the requested service.
-- Review provider data retention and privacy policies.
-
-### Important
-
-Do not send camera footage, audio, or personal information to external services unless the feature genuinely requires it and the user has been informed.
-
-Sarvam AI must not be treated as the ISL gesture recognition model unless a verified service explicitly supports that task.
-
----
-
-## 14. File Upload Security
-
-If image or video uploads are supported:
-
-- Validate file type.
-- Validate actual file contents.
-- Restrict file size.
-- Restrict image dimensions.
-- Use safe temporary storage.
-- Generate safe filenames.
-- Avoid trusting original filenames.
-- Prevent path traversal.
-- Reject corrupted files.
-- Remove temporary files after processing.
-- Avoid permanent storage unless required.
-
-Never execute uploaded files.
-
-Never trust a file merely because its extension is `.jpg`, `.png`, or `.mp4`.
-
----
-
-## 15. WebSocket Security
-
-If real-time recognition uses WebSockets:
-
-- Validate connection origins.
-- Authenticate connections when required.
-- Validate incoming messages.
-- Limit message size.
-- Limit connection rates.
-- Handle disconnects safely.
-- Prevent unbounded queues.
-- Avoid logging sensitive frame data.
-- Close connections properly.
-- Prevent unauthorised access to user-specific sessions.
-
-Do not introduce WebSockets unless they are required by the actual recognition workflow.
-
----
-
-## 16. Dependency and Supply Chain Security
-
-Third-party dependencies can introduce vulnerabilities.
-
-### Rules
+### Requirements
 
 - Install packages from trusted sources.
-- Check package maintenance.
-- Review package licences.
 - Avoid unnecessary dependencies.
-- Keep lockfiles committed.
-- Review dependency updates.
-- Remove unused packages.
-- Avoid installing unknown GitHub scripts directly.
-- Check for known vulnerabilities.
+- Check package maintenance and compatibility.
+- Review security advisories.
+- Avoid installing unknown scripts.
+- Pin important dependency versions where practical.
+- Review major version upgrades before applying them.
 
-### Frontend
-
-Use the existing npm lockfile and inspect dependencies before upgrading.
-
-### Backend
-
-Use the project's existing Python dependency management approach.
-
-Do not upgrade major versions without checking compatibility with FastAPI, PyTorch, OpenCV, and the selected model.
+Do not run downloaded scripts without inspecting their source.
 
 ---
 
-## 17. Logging and Monitoring Security
+# 14. Network and Deployment Security
 
-Logs must support debugging without exposing sensitive information.
+For production deployment:
 
-### Safe Events to Log
+- Use HTTPS.
+- Configure secure CORS policies.
+- Keep secrets on the backend.
+- Restrict public API access where appropriate.
+- Apply request size limits.
+- Configure suitable timeouts.
+- Avoid exposing internal development ports.
+- Keep debug mode disabled.
+- Use secure environment configuration.
+- Monitor application errors.
 
-- Application startup and shutdown.
-- API request completion.
-- Model loading status.
-- Recognition processing status.
-- External provider failures.
-- Authentication failures.
-- Unexpected server errors.
-
-### Never Log
-
-- API keys.
-- Passwords.
-- Access tokens.
-- Session secrets.
-- Raw camera frames.
-- Private audio recordings.
-- Full sensitive request payloads.
-- Database credentials.
-
-Use appropriate log levels.
-
-Avoid verbose debug logging in production.
+Do not expose development tools or debug endpoints publicly.
 
 ---
 
-## 18. Deployment Security
+# 15. Resource Protection
 
-Before production deployment, verify:
+AI inference can consume significant CPU, GPU, and memory resources.
 
-- HTTPS is enabled.
-- Environment variables are configured.
-- Debug mode is disabled.
-- CORS uses approved origins.
-- API secrets are not exposed.
-- Database access is restricted.
-- Model files come from verified sources.
-- Upload limits are configured.
-- Request timeouts are configured.
-- Logs do not contain secrets.
-- Dependencies are reviewed.
-- Health checks do not expose sensitive information.
+Requirements:
 
-### Hosting Rules
+- Limit upload sizes.
+- Limit video duration where applicable.
+- Restrict frame counts.
+- Validate sequence lengths.
+- Avoid unlimited concurrent inference.
+- Handle GPU memory errors.
+- Set suitable request timeouts.
+- Prevent repeated model loading.
+- Avoid unrestricted background processing.
 
-- Never assume a hosting provider offers GPU support.
-- Do not expose private storage.
-- Do not store credentials in deployment configuration files committed to Git.
-- Verify model storage persistence.
-- Check service access controls.
-- Review hosting costs and usage limits.
-
-Follow `docs/DEPLOYMENT.md`.
+Do not allow one request to consume unlimited system resources.
 
 ---
 
-## 19. Git and Repository Security
+# 16. Security Testing
 
-Keep the repository free from secrets and sensitive files.
+Test the following areas:
 
-### Never Commit
+| Area | Security Test |
+|---|---|
+| API | Invalid request validation |
+| Uploads | Unsupported file rejection |
+| CORS | Unapproved origin rejection |
+| Secrets | No credentials in frontend or Git |
+| Camera | Permission and cleanup behaviour |
+| AI Models | Untrusted checkpoint handling |
+| Database | Query safety |
+| Errors | No internal details exposed |
+| Dependencies | Known vulnerability checks |
+| Deployment | HTTPS and debug configuration |
 
-- `.env` files.
-- API keys.
-- Passwords.
-- Private tokens.
-- Database dumps containing personal information.
-- Raw user recordings.
-- Private datasets.
-- Unapproved model checkpoints.
-- Private certificates.
-- Deployment credentials.
-
-### Git Rules
-
-- Review staged files before committing.
-- Use `.gitignore`.
-- Check commit history for accidental secrets.
-- Do not force-push without approval.
-- Do not rewrite shared Git history without approval.
-- Rotate exposed credentials immediately.
-
-Example:
-
-```bash
-git status
-git diff
-git diff --cached
-```
-
-If a secret is committed, removing it from the latest file is not enough. Revoke or rotate the exposed credential and follow the repository's incident response process.
+Security testing must be performed before production deployment.
 
 ---
 
-## 20. Security Testing
-
-Security requirements must be tested.
-
-### Frontend Security
-
-- Untrusted input rendering.
-- Camera permission handling.
-- Microphone permission handling.
-- Secret exposure checks.
-- Authentication state handling, if implemented.
-- Secure production configuration.
-
-### Backend Security
-
-- Invalid request validation.
-- Oversized upload rejection.
-- Unsupported file rejection.
-- CORS configuration.
-- Authentication checks, if implemented.
-- Authorisation checks, if implemented.
-- Rate limiting, if implemented.
-- Safe error responses.
-
-### AI Security
-
-- Untrusted checkpoint rejection.
-- Missing model handling.
-- Invalid model input handling.
-- Checkpoint compatibility.
-- Temporary file cleanup.
-
-### Database Security
-
-- Access control.
-- Credential handling.
-- User data isolation.
-- Safe query handling.
-- Migration safety.
-
-Do not claim a security test passed unless it was executed.
-
----
-
-## 21. Security Incident Handling
+# 17. Security Incident Handling
 
 If a security issue is discovered:
 
 1. Stop the affected operation if necessary.
 2. Identify the affected component.
-3. Determine what data or credentials may be exposed.
-4. Revoke or rotate compromised credentials.
-5. Restrict affected access.
-6. Preserve relevant safe diagnostic logs.
-7. Fix the underlying vulnerability.
-8. Add regression tests.
-9. Update relevant documentation.
-10. Report the actual impact and resolution.
+3. Avoid exposing additional user data.
+4. Preserve relevant technical logs without collecting sensitive content.
+5. Fix the root cause.
+6. Rotate exposed credentials.
+7. Test the fix.
+8. Document the issue and resolution.
 
-Do not hide or misrepresent security incidents.
-
-Do not publish exposed credentials in issue reports or pull requests.
+Do not hide security failures or claim they are resolved without verification.
 
 ---
 
-## 22. AI Agent Security Rules
+# 18. Strict Rules for Antigravity
 
-When working as Antigravity or another coding agent:
+Before making security-related changes:
 
-- Read the root `AGENTS.md`.
-- Read `docs/SECURITY.md`.
-- Inspect existing security controls before changing them.
-- Never print environment variable values containing secrets.
-- Never expose credentials in frontend code.
-- Never disable validation to make a feature work.
-- Never weaken CORS or authentication without approval.
-- Never remove security checks without approval.
-- Never download and execute unknown scripts.
-- Never load untrusted model checkpoints.
-- Never collect camera or microphone data without the required permission.
-- Never store raw recordings by default.
-- Never mark security checks as passed without testing.
+1. Inspect the existing implementation.
+2. Read `SECURITY.md`.
+3. Read `backend-rules.md`.
+4. Read `frontend-rules.md`.
+5. Reuse existing security controls.
+6. Do not weaken existing protections.
+7. Do not expose credentials.
+8. Do not delete security configuration without approval.
+9. Do not install untrusted dependencies.
+10. Do not add unnecessary authentication.
+11. Do not store camera data without approval.
+12. Do not load untrusted model checkpoints.
+13. Do not claim security testing passed without running it.
+14. Keep code, comments, and tests in English.
+15. Update relevant documentation when security behaviour changes.
 
-If a security requirement conflicts with a requested feature, explain the risk and propose a safer implementation.
-
----
-
-## 23. Security Definition of Done
-
-A security-related task is complete only when:
-
-- [ ] The security requirement is understood.
-- [ ] Existing controls have been inspected.
-- [ ] The implementation follows least-privilege principles.
-- [ ] User data is protected.
-- [ ] Secrets are not exposed.
-- [ ] Camera and microphone permissions are respected.
-- [ ] Inputs are validated.
-- [ ] Errors do not reveal sensitive information.
-- [ ] Relevant security tests are executed.
-- [ ] Documentation is updated.
-- [ ] Remaining risks are documented.
+If a security requirement is unclear, report the risk before implementing a potentially unsafe change.
 
 ---
 
-## 24. Final Security Principle
+# 19. Final Security Goal
 
-Signova AI must protect users while providing accessible sign language recognition.
+Signova AI must protect user privacy, camera data, application credentials, model files, and backend resources.
 
-Prioritise:
+Security must be part of every development phase.
 
-1. User privacy.
-2. Camera and microphone control.
-3. Secure API communication.
-4. Safe AI model integration.
-5. Credential protection.
-6. Secure data handling.
-7. Responsible prediction output.
-8. Reliable deployment.
-
-**Security must never be sacrificed to make a feature appear functional. Build Signova AI with privacy, transparency, and user trust as core requirements.**
+**Never sacrifice user privacy or application security to make a feature appear functional.**

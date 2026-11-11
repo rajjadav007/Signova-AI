@@ -1,2 +1,0 @@
-"""Signova AI Research Package."""
-

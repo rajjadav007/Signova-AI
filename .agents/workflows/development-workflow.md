@@ -1,528 +1,535 @@
-# Signova AI Development Workflow
+# Development Workflow
 
-## 1. Purpose
+## Signova AI
 
-This document defines the standard development workflow for Signova AI.
-
-All developers and AI coding agents must follow this workflow when creating features, fixing bugs, integrating AI models, or modifying existing code.
-
-The main goals are:
-
-- Keep the codebase organised and maintainable.
-- Avoid unnecessary changes.
-- Verify AI model compatibility before integration.
-- Test changes before marking tasks complete.
-- Keep documentation aligned with the actual implementation.
-- Protect user privacy and application security.
+**Project:** Signova AI  
+**Development Approach:** Backend First  
+**Frontend:** React + JavaScript + Vite  
+**Backend:** Python 3.11 + FastAPI  
+**AI Framework:** PyTorch  
+**Primary Environment:** Local Windows Development  
+**Fallback Environment:** Kaggle
 
 ---
 
-## 2. Before Starting Development
+# 1. Development Principles
 
-Before modifying any files, the coding agent must:
+Follow these principles throughout development:
 
-1. Inspect the existing project structure.
-2. Read the root `AGENTS.md`.
-3. Read the relevant files inside `docs/`.
-4. Read the applicable rules from `.agents/rules/`.
-5. Check existing components, APIs, services, and utilities.
-6. Understand the current implementation before proposing changes.
+1. Work in small, testable steps.
+2. Follow the documented project architecture.
+3. Build the backend before connecting the frontend.
+4. Validate pretrained models before integration.
+5. Keep AI, backend, and frontend modules separate.
+6. Reuse existing code wherever possible.
+7. Test each feature before moving forward.
+8. Avoid unnecessary dependencies and files.
+9. Never use fake AI predictions.
+10. Update progress based on actual implementation.
 
-### Required documentation
+---
 
-| Task | Documents to read |
+# 2. Initial Repository Inspection
+
+Before writing code, inspect the existing repository.
+
+### Tasks
+
+- Review the current folder structure.
+- Identify existing frontend and backend files.
+- Identify installed dependencies.
+- Inspect existing AI experiments.
+- Identify available datasets and model checkpoints.
+- Review existing configuration files.
+- Read the relevant project documentation.
+
+### Important Rules
+
+- Do not delete existing files without approval.
+- Do not overwrite working implementations without inspection.
+- Do not duplicate existing modules.
+- Do not assume the proposed folder structure has already been created.
+- Report missing dependencies and configuration.
+
+**Completion condition:** The existing project structure and implementation status are understood.
+
+---
+
+# 3. Phase 1: Project Foundation
+
+### Backend Setup
+
+- Set up Python 3.11 virtual environment.
+- Install required backend dependencies.
+- Configure FastAPI.
+- Create the application entry point.
+- Configure environment variables.
+- Add the health endpoint.
+- Verify local server startup.
+
+### Frontend Setup
+
+- Set up React with Vite.
+- Use JavaScript and JSX only.
+- Configure the CSS foundation.
+- Create the main application entry point.
+- Verify frontend startup.
+
+### Completion condition
+
+Both applications start locally without critical errors.
+
+---
+
+# 4. Phase 2: Backend API Foundation
+
+Implement the backend before connecting the frontend.
+
+### Tasks
+
+- Organise FastAPI routes.
+- Create Pydantic schemas.
+- Add API versioning.
+- Configure CORS.
+- Add centralised error handling.
+- Configure logging.
+- Add backend health status.
+- Add AI service status.
+
+### Planned Endpoints
+
+| Endpoint | Purpose |
 |---|---|
-| General development | `docs/PROJECT_OVERVIEW.md`, `docs/FEATURES.md` |
-| Frontend | `docs/UI_UX_GUIDELINES.md`, `.agents/rules/frontend-rules.md` |
-| Backend | `docs/SYSTEM_ARCHITECTURE.md`, `.agents/rules/backend-rules.md` |
-| AI/ML integration | `docs/AI_MODEL_STRATEGY.md`, `.agents/rules/ai-ml-rules.md` |
-| API development | `docs/API_DOCUMENTATION.md` |
-| Database changes | `docs/DATABASE_SCHEMA.md` |
-| Testing | `docs/TESTING_STRATEGY.md` |
-| Security changes | `docs/SECURITY.md`, `.agents/rules/security-rules.md` |
-| Deployment | `docs/DEPLOYMENT.md` |
-| Project progress | `docs/PROGRESS_TRACKER.md` |
+| `GET /api/v1/health` | Backend health |
+| `GET /api/v1/ai/health` | AI service status |
+| `GET /api/v1/ai/models` | Available model information |
 
-Do not assume that a planned feature or example in documentation already exists in the codebase.
+Do not expose model-dependent prediction endpoints as functional until their underlying pipeline is ready.
+
+### Completion condition
+
+Backend routes respond correctly and pass their initial tests.
 
 ---
 
-## 3. Task Understanding and Planning
+# 5. Phase 3: AI Model Research
 
-Before writing code:
+Identify a suitable pretrained model for ISL recognition.
 
-1. Identify the exact task and expected outcome.
-2. Identify the files and modules likely to be affected.
-3. Check whether existing functionality can be reused.
-4. Identify dependencies and possible risks.
-5. Check whether the task requires frontend, backend, AI/ML, or database changes.
-6. Create a short implementation plan.
+### Tasks
 
-For larger tasks, divide the work into small, testable steps.
+- Search for pretrained ISL models.
+- Inspect model documentation.
+- Verify supported sign language.
+- Identify model input requirements.
+- Inspect architecture and checkpoints.
+- Check preprocessing requirements.
+- Verify model licence.
+- Check hardware requirements.
+- Identify compatible test samples.
 
-Do not start implementation when essential requirements are unclear. Ask one focused question when necessary.
+### Model Evaluation Candidates
 
----
+Treat research candidates as unverified until tested.
 
-## 4. Development Workflow
+The `manavdhamecha77/iSign-t5-pose-to-text` model is an experimental pose-to-text candidate.
 
-Follow this sequence for every development task:
+It must not be assumed to accept raw webcam images or video frames.
 
-### Step 1: Inspect
+### Completion condition
 
-- Inspect the relevant source files.
-- Understand existing coding patterns.
-- Check dependencies and configuration.
-- Identify related tests.
-- Avoid duplicating existing functionality.
+A candidate model has documented input requirements, a usable checkpoint, and a practical validation plan.
 
-### Step 2: Plan
-
-- Define the expected behaviour.
-- Identify the smallest required changes.
-- Decide which modules need updates.
-- Define how the changes will be tested.
-
-### Step 3: Implement
-
-- Follow the existing project structure.
-- Write modular and reusable code.
-- Use clear naming conventions.
-- Keep frontend and backend responsibilities separate.
-- Handle loading, error, empty, and success states.
-- Avoid unrelated refactoring.
-
-### Step 4: Validate
-
-- Run relevant linting and formatting checks.
-- Run affected unit and integration tests.
-- Test API behaviour.
-- Verify frontend interactions.
-- Check browser console and backend logs.
-- Fix errors introduced by the changes.
-
-### Step 5: Review
-
-- Review the final code changes.
-- Check for security and privacy issues.
-- Check for unused dependencies and files.
-- Verify that no secrets or personal data were exposed.
-- Confirm that existing features still work.
-
-### Step 6: Document
-
-- Update relevant documentation.
-- Update API documentation when endpoints change.
-- Update model documentation when AI behaviour changes.
-- Update environment examples when configuration changes.
-- Update `docs/PROGRESS_TRACKER.md` only after verifying completion.
-
-### Step 7: Report
-
-Provide a concise summary containing:
-
-- What was implemented.
-- Which files were changed.
-- Tests and checks performed.
-- Test results.
-- Known limitations or remaining tasks.
-
-Never claim that a test passed if it was not executed successfully.
+If no compatible model is available, report the limitation rather than pretending the model is ready.
 
 ---
 
-## 5. Frontend Development Workflow
+# 6. Phase 4: Standalone Model Testing
 
-**Technology:** React, JavaScript, Vite, Tailwind CSS, shadcn/ui and Lucide React.
+Test the model independently from FastAPI.
 
-When developing frontend features:
+### Tasks
 
-1. Check whether a reusable component already exists.
-2. Follow the established UI design guidelines.
-3. Use JavaScript, not TypeScript.
-4. Keep components focused and reusable.
-5. Use React hooks appropriately.
-6. Keep API calls separate from presentation components when practical.
-7. Add proper loading, error, empty, and success states.
-8. Make layouts responsive.
-9. Support keyboard navigation and accessible labels.
-10. Test important user interactions.
+1. Configure the model environment.
+2. Download the required checkpoint.
+3. Verify checkpoint compatibility.
+4. Implement or reproduce original preprocessing.
+5. Prepare a compatible sample.
+6. Run standalone inference.
+7. Compare prediction with expected output.
+8. Record inference time.
+9. Record errors and limitations.
 
-### Frontend quality checks
+### Validation Record
 
-- No unnecessary component duplication.
-- No hardcoded API secrets.
-- No broken navigation.
-- No console errors.
-- No unhandled API failures.
-- No misleading AI recognition results.
-- Camera and microphone access must require appropriate user permission.
+| Field | Description |
+|---|---|
+| Model | Selected checkpoint |
+| Input | Test sample |
+| Input Format | Image, video, or landmarks |
+| Expected Output | Ground truth |
+| Predicted Output | Actual model result |
+| Preprocessing | Configuration used |
+| Inference Time | Measured duration |
+| Status | Pass, Fail, or Inconclusive |
 
----
+### Completion condition
 
-## 6. Backend Development Workflow
+The model loads and produces a result on compatible input, with its limitations recorded.
 
-**Technology:** Python 3.11, FastAPI, Pydantic and Uvicorn.
-
-When developing backend features:
-
-1. Inspect existing API routes and service modules.
-2. Keep routes separate from business logic.
-3. Validate all incoming data.
-4. Use Pydantic schemas for request and response validation.
-5. Add appropriate error handling.
-6. Avoid blocking asynchronous endpoints unnecessarily.
-7. Keep configuration in environment variables.
-8. Protect external API credentials.
-9. Add tests for new endpoints and services.
-10. Update API documentation.
-
-### Backend quality checks
-
-- Correct HTTP status codes.
-- Consistent response structures.
-- Input validation.
-- Safe exception handling.
-- Appropriate logging.
-- No exposed credentials.
-- No unnecessary database queries.
-- No unbounded processing of uploaded media.
+A single successful prediction does not establish general model accuracy.
 
 ---
 
-## 7. AI/ML Integration Workflow
+# 7. Phase 5: AI Module Development
 
-AI/ML functionality is a core part of Signova AI.
+After standalone validation, integrate the model into modular AI code.
 
-Before integrating any model:
+### Tasks
 
-1. Identify whether the model supports Indian Sign Language.
-2. Confirm whether it recognises static signs, dynamic signs, or continuous sign sequences.
-3. Inspect the model architecture.
-4. Verify the checkpoint format and loading requirements.
-5. Identify the required input format and dimensions.
-6. Verify preprocessing requirements.
-7. Confirm the class labels and output mapping.
-8. Check dependencies and hardware requirements.
-9. Test inference independently before connecting it to the API.
-10. Document limitations and evaluation results.
+- Implement model loading.
+- Implement model configuration.
+- Implement preprocessing.
+- Implement model adapters.
+- Implement inference.
+- Implement postprocessing.
+- Add input validation.
+- Add error handling.
+- Add model status reporting.
 
-### Model integration sequence
+### Suggested Module Structure
 
 ```text
-Pretrained Model
-       |
-       v
-Architecture Verification
-       |
-       v
-Checkpoint Loading
-       |
-       v
-Input Preprocessing
-       |
-       v
-Model Inference
-       |
-       v
-Output Processing
-       |
-       v
-Prediction + Confidence
-       |
-       v
-FastAPI Integration
-       |
-       v
-React Frontend
+ai/
+├── preprocessing/
+├── pose_extraction/
+├── inference/
+├── model_adapters/
+├── postprocessing/
+└── config/
 ```
 
-### Important AI/ML rules
+Reuse existing modules wherever possible.
 
-- Do not train a model from scratch unless explicitly approved.
-- Do not assume an ASL model supports ISL.
-- Do not treat alphabet classification as complete sign-language translation.
-- Do not invent model accuracy or performance metrics.
-- Do not invent model output labels.
-- Handle unsupported signs and low-confidence predictions.
-- Verify the actual model before changing its preprocessing pipeline.
-- Never load an untrusted checkpoint without appropriate safety checks.
-- Do not claim real-time performance without measuring it.
+### Completion condition
 
-### Model evaluation
-
-Where applicable, evaluate:
-
-- Accuracy.
-- Precision.
-- Recall.
-- F1-score.
-- Confusion matrix.
-- Inference latency.
-- Per-class performance.
-- Performance under different lighting and camera conditions.
-
-Report only measured results.
+The AI pipeline can be called independently and returns structured results or clear errors.
 
 ---
 
-## 8. Database Development Workflow
+# 8. Phase 6: AI and Backend Integration
 
-PostgreSQL is optional and should only be introduced when persistent data is required.
+Connect the validated AI pipeline to FastAPI.
 
-Before making database changes:
+### Tasks
 
-1. Check `docs/DATABASE_SCHEMA.md`.
-2. Confirm that the feature actually needs persistent storage.
-3. Reuse existing database models where possible.
-4. Use migrations for schema changes.
-5. Validate database input.
-6. Apply appropriate access controls.
-7. Avoid storing raw camera footage by default.
-8. Test database operations.
-9. Update the database documentation.
+- Create the AI service layer.
+- Load the model once during startup or controlled lazy loading.
+- Add compatible prediction endpoints.
+- Validate incoming requests.
+- Connect preprocessing and inference.
+- Return structured JSON responses.
+- Handle model and inference failures.
+- Add API tests.
 
-Never introduce a database table or migration without a clear feature requirement.
+### Planned Prediction Endpoints
 
----
-
-## 9. API Integration Workflow
-
-When connecting the frontend and backend:
-
-1. Confirm the actual API endpoint.
-2. Verify the HTTP method and request schema.
-3. Verify the response schema.
-4. Implement appropriate loading and error states.
-5. Handle network failures and timeouts.
-6. Validate returned data before displaying it.
-7. Test the complete request-response flow.
-
-For real-time features:
-
-- Use WebSockets only when needed.
-- Validate connection permissions.
-- Handle connection interruptions.
-- Release resources when the session ends.
-- Avoid sending unnecessary video frames.
-
-Do not create frontend API calls for endpoints that have not been implemented.
-
----
-
-## 10. External AI Service Integration
-
-Signova AI may use external services such as Sarvam AI for supported speech and language features.
-
-Before integrating an external service:
-
-1. Confirm that the service supports the required task.
-2. Read the current provider documentation.
-3. Verify the request and response formats.
-4. Store API keys on the backend.
-5. Handle API failures and rate limits.
-6. Avoid sending unnecessary personal information.
-7. Document provider dependencies and limitations.
-
-Important distinction:
-
-Sarvam AI can support speech and language processing. It does not independently perform ISL gesture recognition.
-
-Keep sign recognition and speech processing as separate responsibilities.
-
----
-
-## 11. Testing Workflow
-
-Run the appropriate tests after implementation.
-
-| Area | Recommended tools |
+| Endpoint | Condition |
 |---|---|
-| Backend | Pytest |
-| API | FastAPI TestClient, HTTPX |
-| Frontend | Vitest |
-| React components | React Testing Library |
-| End-to-end | Playwright |
-| Code quality | Ruff, ESLint |
-| ML evaluation | scikit-learn metrics |
+| `POST /api/v1/ai/predict/image` | Only when an image-compatible model is ready |
+| `POST /api/v1/ai/predict/video` | Only when a compatible video pipeline is ready |
+| `POST /api/v1/ai/predict/landmarks` | Only when landmark input compatibility is verified |
 
-### Minimum testing requirements
+### Completion condition
 
-- Test new functionality.
-- Test expected failure cases.
-- Test invalid inputs.
-- Test API responses.
-- Test important frontend interactions.
-- Test model loading and inference separately.
-- Run relevant regression tests.
-
-Do not skip tests silently. If a test cannot run, report the reason.
+The backend returns actual model predictions using compatible input.
 
 ---
 
-## 12. Security and Privacy Workflow
+# 9. Phase 7: Frontend Development
 
-Every feature must follow `docs/SECURITY.md` and `.agents/rules/security-rules.md`.
+After the backend API is ready, build the main user interface.
 
-Required practices:
+### Tasks
 
-- Request camera and microphone permission appropriately.
-- Process camera data only for the required functionality.
-- Do not store raw recordings by default.
-- Never expose API keys in frontend code.
-- Validate uploaded images and videos.
-- Protect API endpoints.
-- Apply appropriate CORS settings.
-- Avoid logging sensitive user information.
-- Keep dependencies updated.
-- Do not commit `.env` files or secrets.
+- Create the application layout.
+- Implement reusable React components.
+- Build the camera interface.
+- Add camera permission handling.
+- Add start and stop controls.
+- Implement recognition status.
+- Add the recognition result panel.
+- Add loading and error states.
+- Follow `UI_UX_GUIDELINES.md`.
+
+### Technology Rules
+
+- React.
+- JavaScript ES6+.
+- Vite.
+- CSS.
+- `.js` and `.jsx` files only.
+- No TypeScript.
+
+### Completion condition
+
+The frontend works locally and its main interactions function correctly.
 
 ---
 
-## 13. Git Workflow
+# 10. Phase 8: Frontend and Backend Connection
 
-Use clear, meaningful commits.
+Connect the frontend to the actual FastAPI endpoints.
 
-Suggested commit prefixes:
+### Tasks
 
-| Prefix | Usage |
+- Configure the API base URL.
+- Create API service modules.
+- Connect backend health status.
+- Send supported recognition input.
+- Display actual prediction responses.
+- Handle loading states.
+- Handle network failures.
+- Handle unsupported model input.
+- Verify API response handling.
+
+### Completion condition
+
+The frontend can send supported input and display genuine backend results.
+
+Do not simulate successful recognition when the model is unavailable.
+
+---
+
+# 11. Phase 9: Speech Output
+
+Implement text-to-speech after recognition output is available.
+
+### Tasks
+
+- Use browser SpeechSynthesis API.
+- Add speak control.
+- Add stop control.
+- Handle empty recognition results.
+- Handle unsupported browser functionality.
+- Show speech status.
+- Prevent unexpected overlapping speech.
+
+### Completion condition
+
+Recognised text can be spoken when valid text is available.
+
+---
+
+# 12. Phase 10: Testing and Validation
+
+Test the complete application.
+
+### Backend Tests
+
+- API health.
+- Request validation.
+- AI service status.
+- Model loading.
+- Preprocessing.
+- Inference.
+- Error handling.
+
+### Frontend Tests
+
+- Component rendering.
+- Camera permissions.
+- Camera cleanup.
+- API integration.
+- Recognition result display.
+- Speech controls.
+- Responsive layout.
+
+### AI Tests
+
+- Model compatibility.
+- Correct input shape.
+- Preprocessing correctness.
+- Prediction output.
+- Evaluation metrics.
+- Inference performance.
+
+### Completion condition
+
+Critical application flows pass testing, and known model limitations are documented.
+
+---
+
+# 13. Phase 11: Hackathon Preparation
+
+Prepare a stable demonstration.
+
+### Tasks
+
+- Verify local environment setup.
+- Confirm backend startup.
+- Confirm frontend startup.
+- Verify model loading.
+- Test the camera.
+- Test recognition using compatible samples.
+- Test speech output.
+- Prepare fallback demo samples.
+- Prepare a short product explanation.
+- Document known limitations.
+
+### Demo Priorities
+
+1. Explain the problem.
+2. Introduce Signova AI.
+3. Show the camera interface.
+4. Demonstrate actual recognition.
+5. Show text output.
+6. Demonstrate speech output.
+7. Explain the model and architecture.
+8. Clearly state current limitations.
+
+Never demonstrate fake recognition results as actual AI output.
+
+---
+
+# 14. Future Development
+
+The following features are outside the initial MVP unless separately approved:
+
+- Expanded ISL vocabulary.
+- Dynamic sign recognition.
+- Continuous ISL sentence translation.
+- Facial expression recognition.
+- Non-manual sign features.
+- User accounts.
+- Recognition history.
+- Persistent database storage.
+- Mobile application.
+
+Add these features only when suitable models, data, and implementation plans are available.
+
+---
+
+# 15. Development Environment Rules
+
+### Local Development
+
+Use the Windows environment as the primary development environment.
+
+- Python 3.11.
+- Virtual environment.
+- Compatible PyTorch installation.
+- NVIDIA GPU when available.
+- CPU fallback.
+
+Verify CUDA availability rather than assuming it works.
+
+### Kaggle Fallback
+
+Use Kaggle when local hardware or environment limitations prevent practical experimentation.
+
+- Avoid downloading unnecessarily large datasets.
+- Check available storage first.
+- Keep experiments reproducible.
+- Record package versions.
+- Do not make Kaggle a mandatory application dependency.
+
+---
+
+# 16. Progress Tracking Rules
+
+Update `PROGRESS_TRACKER.md` after completing meaningful development work.
+
+Use these statuses:
+
+| Status | Meaning |
 |---|---|
-| `feat:` | New feature |
-| `fix:` | Bug fix |
-| `docs:` | Documentation |
-| `refactor:` | Code restructuring |
-| `test:` | Tests |
-| `chore:` | Configuration or maintenance |
-| `perf:` | Performance improvement |
-| `security:` | Security improvement |
+| Pending | Not started |
+| In Progress | Currently being implemented |
+| Blocked | Waiting for a dependency or decision |
+| Completed | Implemented and verified |
+| Failed | Attempted but unsuccessful |
+| Not Applicable | Not required for the current scope |
 
-Examples:
+### Progress Requirements
 
-```bash
-git add .
-git commit -m "feat: add ISL recognition interface"
-
-git commit -m "fix: handle low-confidence predictions"
-
-git commit -m "docs: update AI model strategy"
-```
-
-Before committing:
-
-- Review changed files.
-- Remove debug statements.
-- Check for secrets.
-- Run relevant tests.
-- Ensure generated files are not committed unnecessarily.
-
-Do not create commits or push changes unless explicitly requested.
+- Update only after actual work.
+- Record test results.
+- Record blockers.
+- Record model validation results.
+- Do not mark planned features as completed.
+- Do not claim tests passed without running them.
 
 ---
 
-## 14. Environment and Dependency Management
+# 17. Git and Repository Rules
 
-- Use Python 3.11 for backend development.
-- Use the existing Node.js and npm versions unless a verified compatibility issue requires a change.
-- Use a Python virtual environment.
-- Keep dependencies documented.
-- Pin versions where appropriate.
-- Avoid unnecessary packages.
-- Do not upgrade major dependencies without checking compatibility.
-- Keep `.env.example` updated without real credentials.
-
-Example setup:
-
-```bash
-# Backend
-python -m venv .venv
-
-# Windows
-.venv\Scripts\activate
-
-pip install -r requirements.txt
-
-# Frontend
-npm install
-npm run dev
-```
-
-Use the actual scripts and dependency files present in the repository. Do not assume these commands are already configured.
+- Keep commits focused.
+- Use clear commit messages.
+- Keep project files in English.
+- Do not commit `.env` files.
+- Do not commit large model checkpoints.
+- Do not commit restricted datasets.
+- Do not delete useful experiments without approval.
+- Inspect changes before committing.
+- Never push changes without explicit approval.
 
 ---
 
-## 15. Performance and Resource Management
+# 18. Strict Rules for Antigravity
 
-Signova AI should work within practical hardware and hosting limits.
+Before implementing any phase:
 
-- Avoid loading the same model repeatedly.
-- Load model weights once when appropriate.
-- Release camera and video resources.
-- Avoid unnecessary image processing.
-- Measure inference latency.
-- Optimise only after measuring bottlenecks.
-- Consider CPU and GPU availability.
-- Avoid adding infrastructure without a clear need.
+1. Read the relevant documentation.
+2. Inspect the existing implementation.
+3. Identify dependencies.
+4. Make the smallest required change.
+5. Avoid unnecessary file creation.
+6. Preserve working code.
+7. Test the change.
+8. Report modified and created files.
+9. Report test results honestly.
+10. Update the progress tracker when appropriate.
 
-Do not promise a specific frame rate or response time without testing.
+Do not skip a phase's validation just to move faster.
 
----
-
-## 16. AI Coding Agent Rules
-
-When using Antigravity or another AI coding agent:
-
-1. Read `AGENTS.md` before starting.
-2. Read the relevant `.agents/rules/` files.
-3. Follow the selected project stack.
-4. Inspect existing files before editing.
-5. Make focused changes.
-6. Do not rewrite unrelated modules.
-7. Do not create duplicate components or services.
-8. Do not invent APIs, datasets, models, or metrics.
-9. Do not remove existing functionality without approval.
-10. Do not install unnecessary dependencies.
-11. Run tests after implementation.
-12. Report incomplete work honestly.
-
-### Approval required before
-
-Ask the user before:
-
-- Replacing the selected ML model.
-- Changing the main technology stack.
-- Introducing paid services.
-- Adding major infrastructure.
-- Removing important existing features.
-- Changing authentication or data-storage policies.
-- Making destructive database or file changes.
+If a phase is blocked, explain the blocker and suggest the smallest practical next step.
 
 ---
 
-## 17. Definition of Done
+# 19. Definition of MVP Completion
 
-A task can be marked complete only when:
+The initial MVP can be considered complete when:
 
-- [ ] Requirements are understood.
-- [ ] Existing code has been inspected.
-- [ ] Relevant project rules have been followed.
-- [ ] Implementation is complete.
-- [ ] Relevant tests have been executed.
-- [ ] Tests pass, or remaining failures are clearly reported.
-- [ ] No known security issue was introduced.
-- [ ] Documentation is updated where required.
-- [ ] No unrelated changes were made.
-- [ ] Final implementation summary is provided.
+- The frontend runs locally.
+- The FastAPI backend runs locally.
+- The backend health endpoint works.
+- A compatible pretrained ISL model is integrated.
+- The model receives correctly formatted input.
+- The model produces genuine prediction output.
+- The frontend displays the actual result.
+- Speech output works for available text.
+- Critical errors are handled.
+- Core tests pass.
+- Known limitations are documented.
 
-If any required item is incomplete, mark the task as partially complete instead.
+A working camera interface alone does not mean ISL recognition is complete.
 
 ---
 
-## 18. Final Development Principle
+# 20. Final Development Goal
 
-Build Signova AI incrementally.
+Build Signova AI in a controlled and testable order.
 
-Prioritise a working, tested ISL recognition flow over unnecessary features or complex architecture.
+**Priority order:**
 
-**Understand → Plan → Implement → Test → Review → Document → Report.**
+1. Repository understanding.
+2. Backend foundation.
+3. Pretrained model validation.
+4. AI pipeline integration.
+5. Frontend implementation.
+6. End-to-end connection.
+7. Testing.
+8. Hackathon demonstration.
 
-Every change must improve the application without introducing unnecessary complexity.
+The goal is a functional and honest ISL recognition prototype, not a collection of unfinished features.
