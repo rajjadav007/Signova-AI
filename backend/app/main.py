@@ -1,18 +1,22 @@
 from contextlib import asynccontextmanager
 import logging
-import os
+from pathlib import Path
 import sys
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from backend.app.api.routes import health, isolated_recognition, predict
-from backend.app.core.config import settings
-from backend.app.services.inference_service import inference_service
-from backend.app.services.isolated_inference_service import isolated_inference_service
+# Ensure backend directory is in sys.path
+backend_dir = str(Path(__file__).resolve().parent.parent)
+if backend_dir not in sys.path:
+    sys.path.insert(0, backend_dir)
+
+from app.api.router import api_router
+from app.core.config import settings
+from app.core.exceptions import register_exception_handlers
 
 logging.basicConfig(
-    level=logging.INFO,
+    level=logging.DEBUG if settings.DEBUG else logging.INFO,
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
     handlers=[logging.StreamHandler(sys.stdout)],
 )
@@ -21,60 +25,44 @@ logger = logging.getLogger("signova.main")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Manage application startup and shutdown lifecycle."""
-    if os.getenv("TESTING", "false").lower() == "true":
-        yield
-        return
-
-    logger.info("Initializing %s...", settings.PROJECT_NAME)
-    try:
-        inference_service.load_model()
-        logger.info("ISLiM model pipeline ready for inference.")
-    except Exception as exc:
-        logger.error("Failed to load ISLiM model during startup: %s", exc, exc_info=True)
-
-    try:
-        isolated_inference_service.load_model()
-        logger.info("Isolated sign recognition pipeline ready for inference.")
-    except Exception as exc:
-        logger.error("Failed to load isolated recognition model during startup: %s", exc, exc_info=True)
+    """Manage lightweight application startup and shutdown lifecycle."""
+    logger.info("Starting %s (%s)...", settings.API_TITLE, settings.APP_ENV)
     yield
-    logger.info("Shutting down %s...", settings.PROJECT_NAME)
+    logger.info("Shutting down %s...", settings.API_TITLE)
 
 
 app = FastAPI(
-    title=settings.PROJECT_NAME,
-    version="1.0.0",
-    description="Signova AI Backend: Indian Sign Language (ISL) recognition API powered by ISLiM.",
+    title=settings.API_TITLE,
+    description=settings.API_DESCRIPTION,
+    version=settings.API_VERSION,
     lifespan=lifespan,
     docs_url="/docs",
     redoc_url="/redoc",
+    openapi_url="/openapi.json",
 )
 
-# CORS Middleware
+# CORS Middleware (registered exactly once)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.CORS_ORIGINS,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_credentials=settings.CORS_ALLOW_CREDENTIALS,
+    allow_methods=settings.CORS_ALLOW_METHODS,
+    allow_headers=settings.CORS_ALLOW_HEADERS,
 )
 
-# Root-level health check
-app.include_router(health.router)
+# Centralized Error Handlers
+register_exception_handlers(app)
 
-# Versioned API routes (/api/v1/...)
-app.include_router(health.router, prefix=settings.API_V1_STR)
-app.include_router(predict.router, prefix=settings.API_V1_STR)
-app.include_router(isolated_recognition.router, prefix=settings.API_V1_STR)
+# Central API Router Integration (prefix applied exactly once)
+app.include_router(api_router, prefix=settings.API_V1_STR)
 
 
 if __name__ == "__main__":
     import uvicorn
 
     uvicorn.run(
-        "backend.app.main:app",
+        "app.main:app",
         host=settings.HOST,
         port=settings.PORT,
-        reload=False,
+        reload=settings.DEBUG,
     )

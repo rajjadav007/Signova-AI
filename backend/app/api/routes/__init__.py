@@ -1,3 +1,3 @@
-from backend.app.api.routes import health, isolated_recognition, predict
+from app.api.routes import health
 
-__all__ = ["health", "predict", "isolated_recognition"]
+__all__ = ["health"]

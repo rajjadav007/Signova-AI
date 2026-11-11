@@ -1,16 +1,22 @@
 from fastapi import APIRouter
-from backend.app.schemas.health import HealthResponse
-from backend.app.services.inference_service import inference_service
+
+from app.core.config import settings
+from app.schemas.health import HealthResponse
 
 router = APIRouter(tags=["health"])
 
 
-@router.get("/health", response_model=HealthResponse)
-async def get_health() -> HealthResponse:
-    """Return backend health and model readiness status."""
+@router.get(
+    "/health",
+    response_model=HealthResponse,
+    summary="Health Check",
+    description="Check Signova AI backend availability and runtime metadata.",
+)
+def get_health() -> HealthResponse:
+    """Return backend liveness and basic application runtime status."""
     return HealthResponse(
-        status="ok" if inference_service.is_loaded else "degraded",
-        model_loaded=inference_service.is_loaded,
-        device=inference_service.device_info,
-        version="1.0.0",
+        status="healthy",
+        application=settings.API_TITLE,
+        version=settings.API_VERSION,
+        environment=settings.APP_ENV,
     )
