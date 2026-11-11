@@ -1,23 +1,32 @@
-# Environment files
+# Environment files and secrets
 .env
 .env.*
 !.env.example
 
 # Python
 __pycache__/
+*.py[cod]
 *.pyc
+*.pyd
+.Python
 .venv/
 venv/
 env/
+ENV/
 *.egg-info/
-.pytest_cache/
 
-# Node
+# Testing and coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Frontend / Node
 node_modules/
 dist/
 .npm/
+.vite/
 
-# Model checkpoints and weights
+# ML models and checkpoints
 *.pt
 *.pth
 *.ckpt
@@ -31,6 +40,8 @@ dist/
 !**/models/README.md
 
 # Datasets and Media
+datasets/*
+!datasets/README.md
 datasets/samples/
 datasets/annotations/
 *.mp4
@@ -39,7 +50,6 @@ datasets/annotations/
 *.mkv
 *.webm
 *.npy
-!**/datasets/README.md
 
 # Temporary files and uploads
 uploads/
@@ -50,7 +60,7 @@ tmp/
 # Logs
 *.log
 
-# IDE and OS files
+# IDE and operating system
 .vscode/
 .idea/
 .DS_Store
