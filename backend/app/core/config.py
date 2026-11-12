@@ -19,6 +19,10 @@ elif (BACKEND_DIR / ".env").exists():
 DEFAULT_MODEL_PATH = PROJECT_ROOT / "research" / "ISLiM" / "checkpoints" / "ISLiM_full_posestitch_pre_processed.pt"
 DEFAULT_TOKENIZER_DIR = PROJECT_ROOT / "research" / "ISLiM" / "assets" / "t5-small"
 
+# iSign T5 Defaults (F-012)
+DEFAULT_ISIGN_MODEL_DIR = Path("D:/iSign-t5-pose-to-text")
+DEFAULT_ISIGN_TOKENIZER_DIR = PROJECT_ROOT / "models" / "tokenizer" / "t5-small"
+
 # Ensure MPLCONFIGDIR is set to a writable temp path
 os.environ.setdefault("MPLCONFIGDIR", os.environ.get("TEMP", "C:/Temp"))
 
@@ -74,6 +78,12 @@ class Settings:
     MODEL_PATH: str = os.getenv("MODEL_PATH", str(DEFAULT_MODEL_PATH))
     TOKENIZER_DIR: str = os.getenv("TOKENIZER_DIR", str(DEFAULT_TOKENIZER_DIR))
     DEVICE: str = os.getenv("MODEL_DEVICE", os.getenv("DEVICE", "cpu"))
+
+    # iSign T5 Pretrained Pose-to-Text Model Config (F-012)
+    ISIGN_MODEL_DIR: str = os.getenv("ISIGN_MODEL_DIR", str(DEFAULT_ISIGN_MODEL_DIR))
+    ISIGN_CHECKPOINT_NAME: str = os.getenv("ISIGN_CHECKPOINT_NAME", "t5-small-motion")
+    ISIGN_TOKENIZER_DIR: str = os.getenv("ISIGN_TOKENIZER_DIR", str(DEFAULT_ISIGN_TOKENIZER_DIR))
+    ISIGN_OFFLINE: bool = os.getenv("ISIGN_OFFLINE", "true").lower() in ("true", "1", "yes")
 
 
 settings = Settings()

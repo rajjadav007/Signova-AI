@@ -10,5 +10,6 @@ torchvision
 mediapipe
 opencv-python
 transformers
+pose-format==0.15.0
 numpy<2.0.0
 scikit-learn

@@ -102,18 +102,109 @@ Every candidate model must be checked for:
 | Hardware | CPU, GPU, RAM, and VRAM requirements |
 | Evaluation | Available metrics and testing methodology |
 
-### 4.2 Candidate Model Repositories
+### 4.2 Approved Primary Model
 
-The following repositories are research candidates, not approved production dependencies. Their code, checkpoints, labels, licences, and reported results must be independently verified before integration.
+Signova AI has selected a single pretrained model for Indian Sign Language translation:
 
-| Repository | Intended use | Status |
-|---|---|---|
-| https://github.com/Dhawal-17/indian_sign_language | Static ISL alphabet recognition | To verify |
-| https://github.com/Uni-Creator/signBridge | Dynamic ISL word recognition | To verify |
-| https://huggingface.co/Creator-090/isl-swin3d-model | Candidate dynamic ISL checkpoint | To verify |
-| https://github.com/google-ai-edge/mediapipe | Hand landmark extraction where required | To evaluate |
+- **Model Repository:** `manavdhamecha77/iSign-t5-pose-to-text`
+- **Hugging Face URL:** https://huggingface.co/manavdhamecha77/iSign-t5-pose-to-text
+- **Local Model Directory:** `D:\iSign-t5-pose-to-text` (Total disk footprint: ~15.23 GB)
 
-ASL models must not be treated as ISL recognition models. They may be used only for separate experiments or technical references, not as the primary ISL recognition system.
+**Important:** No alternative models will be searched, recommended, or downloaded. Signova AI will use this model exclusively. Earlier research candidates (Dhawal-17 ISL, signBridge, isl-swin3d-model) are superseded.
+
+### 4.4 Selected Pretrained Model Technical Specification (F-011 Inspection)
+
+The local directory `D:\iSign-t5-pose-to-text` has been completely inspected and verified.
+
+#### 4.4.1 Actual Downloaded Checkpoint Variants & File Integrity
+
+All six expected checkpoint variants exist in `D:\iSign-t5-pose-to-text`. All weight files and configs were validated as uncorrupted:
+
+| Checkpoint Variant | Architecture | Feature Type | Pose Dimension | Base T5 | `model.safetensors` | `pose_encoder.pt` | Status |
+|---|---|---|---|---|---|---|---|
+| `t5-small` | T5-Small | Spatial | 300 | `t5-small` | 242,041,896 B (~242 MB) | 837,263 B (256x300 -> 512x256) | Verified Valid |
+| `t5-small-motion` | T5-Small | Spatial + Motion | 600 | `t5-small` | 242,041,896 B (~242 MB) | 1,144,463 B (256x600 -> 512x256) | Verified Valid |
+| `t5-base` | T5-Base | Spatial | 300 | `t5-base` | 891,644,712 B (~891 MB) | 1,100,431 B (256x300 -> 768x256) | Verified Valid |
+| `t5-base-motion` | T5-Base | Spatial + Motion | 600 | `t5-base` | 891,644,712 B (~891 MB) | 1,407,631 B (256x600 -> 768x256) | Verified Valid (Folder named `t5-base-motion`, not `-v2`) |
+| `t5-large` | T5-Large | Spatial | 300 | `t5-large` | 2,950,734,544 B (~2.95 GB) | 1,363,599 B (256x300 -> 1024x256) | Verified Valid |
+| `t5-large-motion` | T5-Large | Spatial + Motion | 600 | `t5-large` | 2,950,734,544 B (~2.95 GB) | 1,670,799 B (256x600 -> 1024x256) | Verified Valid |
+
+*Key Directory Observations:*
+- Each variant subfolder contains `pose_encoder.pt` and a `t5/` subfolder with `config.json`, `generation_config.json`, and `model.safetensors`.
+- The directory on disk is named `t5-base-motion`. The name `t5-base-motion-v2` appears in the author's README but does not exist on disk.
+- Tokenizer files (`tokenizer.json`, `spiece.model`) are NOT stored in the checkpoint directories; official inference downloads the base T5 tokenizer from Hugging Face.
+- Official `inference/` folder contains `inference.py`, `model.py`, `pose_utils.py`, and `requirements.txt`.
+- Defect identified in official `inference/inference.py`: `MODEL_CONFIGS` dictionary omits `t5-base-motion` / `t5-base-motion-v2`.
+
+#### 4.4.2 Model Architecture & Inference Pipeline
+
+The system uses a 2-stage sequence-to-sequence translation architecture:
+
+```text
+Pose Sequence: (batch, seq_len, pose_dim)
+       |
+       v
+PoseEncoder (MLP): Linear(pose_dim, 256) -> ReLU -> Dropout(0.1) -> Linear(256, d_model)
+       |
+       v
+Pose Embeddings: (batch, seq_len, d_model)
+       |
+       v
+T5 Encoder (Bidirectional Self-Attention across sequence)
+       |
+       v
+T5 Decoder (Autoregressive Generation with Beam Search, num_beams=4, max_length=128)
+       |
+       v
+English Sentence Text
+```
+
+- **Pose Dimension (`pose_dim`):**
+  - 300 for spatial models (75 landmarks * 4 channels: x, y, z, confidence).
+  - 600 for motion models (300 spatial + 300 temporal velocity deltas).
+- **Official Preprocessing Workflow (`pose_utils.py`):**
+  1. Landmark extraction: 33 pose landmarks + 21 left hand + 21 right hand = 75 points.
+  2. Coordinate packing: `[x, y, z, confidence]` per landmark -> 300 values per frame.
+  3. Feature dimension padding/truncation: padded/truncated to 300 dimensions.
+  4. Sequence-level Z-Score Normalization: `(pose - mean) / std` computed across all frames in the segment.
+  5. Motion feature addition (for motion checkpoints): `velocity[t] = pose[t] - pose[t-1]`, concatenated with pose -> 600 values per frame.
+  6. Temporal padding/truncation: padded with zeros or truncated to `max_length = 500` frames (~16.6s at 30 fps).
+
+#### 4.4.3 Webcam Compatibility Requirements
+
+The model does NOT accept raw video frames or single static images:
+- **MediaPipe Holistic Integration:** A live capture pipeline must run MediaPipe Holistic to extract `POSE_LANDMARKS` (33), `LEFT_HAND_LANDMARKS` (21), and `RIGHT_HAND_LANDMARKS` (21).
+- **Format Mapping:**
+  - Coordinates: Normalized (x, y) [0.0, 1.0], relative depth z, and confidence/visibility scores.
+  - When hands are not detected, coordinates and confidence are set to 0.0.
+  - Flattening order must strictly match: Pose (indices 0..32), Left Hand (0..20), Right Hand (0..20).
+- **Normalization Constraint:** Z-score normalization cannot be performed on single frames in real time. Frames must be accumulated in a temporal buffer over a complete signing duration before normalization.
+
+#### 4.4.4 Checkpoint Recommendation
+
+- **Recommended Checkpoint:** `t5-small-motion` (with `t5-small` as fallback).
+- **Rationale:**
+  - **Size & Memory:** ~243 MB total footprint, fits comfortably within ~500 MB - 1 GB RAM.
+  - **Motion Awareness:** Motion features (600 dims) are essential for distinguishing dynamic ISL signs where hand trajectory differentiates meaning.
+  - **Latency:** Fast CPU execution (~150-300 ms per segment translation).
+  - **Hardware Fit:** Runs reliably without CUDA on CPU, completely avoiding the 4 GB GPU VRAM constraint.
+
+#### 4.4.5 Hardware Feasibility (CPU vs GPU)
+
+- **Target Dev Environment:** Windows, Python 3.11, NVIDIA GPU (~4 GB VRAM), CPU inference fallback.
+- **Current PyTorch Environment:** CPU-only (`torch 2.2.2+cpu`, `torch.cuda.is_available() = False`).
+- **CPU Verification:** Confirmed via standalone execution on `t5-small` and `t5-small-motion`. Both checkpoints instantiate, load state dicts, and execute `generate()` on CPU cleanly.
+- **GPU Feasibility:** `t5-small` and `t5-base` will fit in 4 GB VRAM once CUDA PyTorch is available; `t5-large` variants (~2.95 GB weights + activations) would risk OOM on a 4 GB VRAM GPU.
+
+#### 4.4.6 Continuous Translation Scope & Limitations
+
+- **What the Model Supports:** Bounded segment-to-sentence translation. Given a completed sequence of signs (up to 500 frames), it produces a grammatical English sentence.
+- **What the Model Does NOT Support:**
+  - Streaming word-by-word instantaneous translation.
+  - Infinite streaming buffers.
+  - Unsegmented continuous video without pause detection.
+- **Buffer & Segment Requirement:** Webcam video must be captured in segments (e.g. 1 to 16 seconds). Signing start and stop boundaries must be detected (via hand activity threshold or user push-to-translate action) to avoid corrupting sequence z-score normalization with idle frames.
+- **Translation Hallucination Risk:** Like all generative T5 models, inputs outside the iSign training distribution may produce plausible-sounding but factually incorrect English sentences.
 
 ### 4.3 Model Approval Process
 
