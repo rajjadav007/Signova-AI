@@ -9,7 +9,15 @@ if backend_dir not in sys.path:
     sys.path.insert(0, backend_dir)
 
 from app.core.config import settings
-from app.main import app
+from app.main import app, root
+
+
+def test_root_endpoint():
+    """Verify root endpoint returns service status."""
+    data = root()
+    assert data["status"] == "online"
+    assert data["docs"] == "/docs"
+    assert data["health"] == "/api/v1/health"
 
 
 def test_app_instance():

@@ -57,6 +57,17 @@ register_exception_handlers(app)
 app.include_router(api_router, prefix=settings.API_V1_STR)
 
 
+@app.get("/", tags=["root"])
+def root():
+    """Root endpoint with service info and links."""
+    return {
+        "status": "online",
+        "app": settings.API_TITLE,
+        "docs": "/docs",
+        "health": f"{settings.API_V1_STR}/health",
+    }
+
+
 if __name__ == "__main__":
     import uvicorn
 
