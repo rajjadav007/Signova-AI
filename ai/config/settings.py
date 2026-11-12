@@ -24,6 +24,14 @@ TARGET_FRAMES: int = 30
 POSE_INDICES: List[int] = [11, 12, 13, 14, 23, 24]  # 6 points
 HAND_LANDMARK_COUNT: int = 21  # 21 per hand
 
+# iSign Continuous SLT Specifications (F-014, F-015)
+ISIGN_POSE_COUNT: int = 33
+ISIGN_HAND_COUNT: int = 21
+ISIGN_TOTAL_LANDMARKS: int = 75  # 33 + 21 + 21
+ISIGN_CHANNELS: int = 4          # [x, y, z, visibility/confidence]
+ISIGN_SPATIAL_DIM: int = 300     # 75 * 4
+ISIGN_MOTION_DIM: int = 600      # 300 + 300
+
 FACE_LIPS: List[int] = [
     61, 146, 91, 181, 84, 17, 314, 405, 321, 375,
     291, 409, 270, 95, 88, 178, 87, 14, 78, 308,
@@ -58,6 +66,16 @@ DEFAULT_MEDIAPIPE_TASK_PATH: Path = (
     Path(os.environ["MEDIAPIPE_MODEL_PATH"]).resolve()
     if "MEDIAPIPE_MODEL_PATH" in os.environ
     else PROJECT_ROOT / "models" / "assets" / "holistic_landmarker.task"
+)
+DEFAULT_POSE_TASK_PATH: Path = (
+    Path(os.environ["MEDIAPIPE_POSE_TASK_PATH"]).resolve()
+    if "MEDIAPIPE_POSE_TASK_PATH" in os.environ
+    else PROJECT_ROOT / "models" / "assets" / "pose_landmarker_full.task"
+)
+DEFAULT_HAND_TASK_PATH: Path = (
+    Path(os.environ["MEDIAPIPE_HAND_TASK_PATH"]).resolve()
+    if "MEDIAPIPE_HAND_TASK_PATH" in os.environ
+    else PROJECT_ROOT / "models" / "assets" / "hand_landmarker.task"
 )
 
 DEFAULT_ISOLATED_CHECKPOINT_PATH: Path = (

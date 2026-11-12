@@ -1,5 +1,5 @@
 """
-Signova AI Inference Package (F-013).
+Signova AI Inference Package (F-013 & F-015).
 """
 
 from ai.inference.model import PoseEncoder, PoseT5, create_model
@@ -13,6 +13,16 @@ from ai.inference.model_loader import (
     resolve_device,
     unload_model,
     validate_loaded_model,
+)
+from ai.inference.pose_translator import (
+    DEFAULT_EARLY_STOPPING,
+    DEFAULT_LENGTH_PENALTY,
+    DEFAULT_MAX_LENGTH,
+    DEFAULT_NUM_BEAMS,
+    InferenceResult,
+    PoseTranslator,
+    predict_from_pose,
+    predict_with_metadata,
 )
 
 __all__ = [
@@ -28,4 +38,12 @@ __all__ = [
     "get_tokenizer",
     "resolve_device",
     "validate_loaded_model",
+    "InferenceResult",
+    "PoseTranslator",
+    "predict_from_pose",
+    "predict_with_metadata",
+    "DEFAULT_MAX_LENGTH",
+    "DEFAULT_NUM_BEAMS",
+    "DEFAULT_LENGTH_PENALTY",
+    "DEFAULT_EARLY_STOPPING",
 ]

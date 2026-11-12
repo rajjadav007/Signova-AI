@@ -50,6 +50,7 @@ datasets/annotations/
 *.mkv
 *.webm
 *.npy
+*.pose
 
 # Temporary files and uploads
 uploads/
